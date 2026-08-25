@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UTEC 15 Años | Innovando el Futuro</title>
-<meta name="description" content="UTEC celebra 15 años formando ingenieros que transforman el Perú a través de la ciencia, la tecnología y la innovación.">
+<title>UTEC 15 años | Recién empezamos</title>
+<meta name="description" content="UTEC, la Universidad Tecnológica del Uruguay, cumple 15 años. Pública, tecnológica y cercana: conocé la campaña de aniversario 'Recién empezamos'.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -17,14 +17,30 @@
 <header class="header" id="header">
   <div class="container header-inner">
     <a href="#" class="logo">
-      <span class="logo-mark">UTEC</span>
-      <span class="logo-badge">15</span>
+      <svg class="logo-mark" viewBox="0 0 60 60" aria-hidden="true">
+        <g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round">
+          <polygon points="30,6 30,54" />
+          <polygon points="6.6,18 53.4,42" />
+          <polygon points="53.4,18 6.6,42" />
+        </g>
+        <g fill="currentColor" stroke="none">
+          <circle cx="30" cy="6" r="4" /><circle cx="30" cy="54" r="4" />
+          <circle cx="6.6" cy="18" r="4" /><circle cx="53.4" cy="42" r="4" />
+          <circle cx="53.4" cy="18" r="4" /><circle cx="6.6" cy="42" r="4" />
+          <circle cx="30" cy="30" r="4.5" />
+        </g>
+      </svg>
+      <span class="logo-word">UTEC</span>
+      <span class="logo-divider" aria-hidden="true"></span>
+      <span class="logo-anniv">
+        <span class="logo-anniv-label">años</span>
+        <span class="logo-anniv-number">15</span>
+      </span>
     </a>
     <nav class="nav" id="nav">
-      <a href="#historia">Historia</a>
-      <a href="#logros">Logros</a>
-      <a href="#actividades">Actividades</a>
-      <a href="#testimonios">Testimonios</a>
+      <a href="#porque">El claim</a>
+      <a href="#define">Quiénes somos</a>
+      <a href="#historias">Historias</a>
       <a href="#contacto" class="nav-cta">Súmate</a>
     </nav>
     <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">
@@ -37,213 +53,149 @@
   <!-- HERO -->
   <section class="hero">
     <div class="hero-bg" aria-hidden="true">
-      <div class="hero-shape shape-1"></div>
-      <div class="hero-shape shape-2"></div>
-      <div class="hero-grid"></div>
+      <div class="hero-pattern"></div>
     </div>
+
+    <div class="hero-balloons" aria-hidden="true">
+      <div class="balloon balloon-orange">
+        <svg viewBox="0 0 60 90"><ellipse cx="30" cy="32" rx="28" ry="32"/><polygon points="24,62 36,62 30,74"/></svg>
+        <span class="balloon-string"></span>
+      </div>
+      <div class="balloon balloon-purple">
+        <svg viewBox="0 0 60 90"><ellipse cx="30" cy="32" rx="28" ry="32"/><polygon points="24,62 36,62 30,74"/></svg>
+        <span class="balloon-string"></span>
+      </div>
+      <div class="balloon balloon-white">
+        <svg viewBox="0 0 60 90"><ellipse cx="30" cy="32" rx="28" ry="32"/><polygon points="24,62 36,62 30,74"/></svg>
+        <span class="balloon-string"></span>
+      </div>
+    </div>
+
     <div class="container hero-inner">
-      <p class="eyebrow" data-reveal>2011 — 2026</p>
-      <h1 data-reveal>
-        <span class="hero-number">15</span> años
-        <br>construyendo el <span class="text-accent">futuro</span> del Perú
+      <p class="eyebrow eyebrow-light" data-reveal>Universidad Tecnológica del Uruguay</p>
+      <h1 class="hero-claim" data-reveal>
+        UTEC 15 años.<br>
+        <span class="text-outline">Recién empezamos</span>
       </h1>
       <p class="hero-sub" data-reveal>
-        Desde 2011, UTEC forma ingenieros e innovadores que resuelven los problemas más grandes
-        del país con ciencia, tecnología y espíritu emprendedor. En 2026 celebramos 15 años de impacto.
+        Miramos estos 15 años y todo lo que construimos: una universidad pública, tecnológica
+        y cercana que crece desde el interior del país. Y al ponerlo en perspectiva, entendemos
+        algo simple — lo mejor todavía está por venir.
       </p>
       <div class="hero-actions" data-reveal>
-        <a href="#actividades" class="btn btn-primary">Ver actividades del aniversario</a>
-        <a href="#historia" class="btn btn-ghost">Conocer nuestra historia</a>
+        <a href="#porque" class="btn btn-primary">Conocer el claim</a>
+        <a href="#historias" class="btn btn-ghost">Ver historias UTEC</a>
       </div>
-      <div class="hero-stats" data-reveal>
-        <div class="hero-stat">
-          <span class="hero-stat-value" data-count="15">0</span>
-          <span class="hero-stat-label">Años de historia</span>
-        </div>
-        <div class="hero-stat">
-          <span class="hero-stat-value" data-count="9000" data-suffix="+">0</span>
-          <span class="hero-stat-label">Egresados e ingenieros en formación</span>
-        </div>
-        <div class="hero-stat">
-          <span class="hero-stat-value" data-count="10">0</span>
-          <span class="hero-stat-label">Carreras de ingeniería</span>
-        </div>
-        <div class="hero-stat">
-          <span class="hero-stat-value" data-count="90" data-suffix="%">0</span>
-          <span class="hero-stat-label">Empleabilidad al egresar</span>
-        </div>
+
+      <div class="hero-tags" data-reveal>
+        <span class="hero-tag"><i class="dot dot-blue"></i>Pública</span>
+        <span class="hero-tag"><i class="dot dot-orange"></i>Tecnológica</span>
+        <span class="hero-tag"><i class="dot dot-purple"></i>Cercana</span>
       </div>
     </div>
-    <a href="#historia" class="scroll-cue" aria-hidden="true"><span></span></a>
+    <a href="#porque" class="scroll-cue" aria-hidden="true"><span></span></a>
   </section>
 
-  <!-- HISTORIA / TIMELINE -->
-  <section id="historia" class="section historia">
+  <!-- EL CLAIM -->
+  <section id="porque" class="section porque">
+    <div class="container porque-grid">
+      <div data-reveal>
+        <p class="section-eyebrow">Claim de campaña</p>
+        <h2>&ldquo;Recién<br>empezamos&rdquo;</h2>
+      </div>
+      <div class="porque-copy" data-reveal>
+        <p>
+          Surge de mirar estos 15 años de UTEC y todo lo que se construyó y logró en este tiempo,
+          especialmente al ponerlo en perspectiva con otras instituciones del ecosistema educativo,
+          con muchas más décadas de trayectoria.
+        </p>
+        <p>
+          En ese contexto, podemos decir que <strong>recién empezamos</strong>. La frase convierte
+          el aniversario en un punto de partida y propone mirar hacia el futuro, con la idea de que
+          lo mejor todavía está por venir.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIÉNES SOMOS -->
+  <section id="define" class="section define">
+    <div class="hero-pattern define-pattern" aria-hidden="true"></div>
     <div class="container">
-      <p class="section-eyebrow" data-reveal>Nuestra historia</p>
-      <h2 data-reveal>Quince años de trayectoria</h2>
+      <p class="section-eyebrow eyebrow-light" data-reveal>Quiénes somos</p>
+      <h2 class="define-title" data-reveal>Lo que nos define</h2>
+
+      <div class="quote-grid">
+        <blockquote class="quote-card" data-reveal>
+          <span class="quote-mark" aria-hidden="true">15</span>
+          <p class="quote-main">
+            Hace 15 años construimos una universidad distinta, pública, tecnológica, cercana.
+          </p>
+          <p class="quote-sub">
+            Lo importante no está solo en lo que hicimos, sino en lo que podemos construir.
+          </p>
+        </blockquote>
+        <blockquote class="quote-card" data-reveal>
+          <span class="quote-mark" aria-hidden="true">15</span>
+          <p class="quote-main">
+            Una universidad pública, tecnológica y cercana, que crece desde el interior,
+            conecta territorios y siembra oportunidades.
+          </p>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- HISTORIAS -->
+  <section id="historias" class="section historias">
+    <div class="container">
+      <p class="section-eyebrow" data-reveal>Historias que recién empiezan</p>
+      <h2 data-reveal>Personas que construyen UTEC</h2>
       <p class="section-lead" data-reveal>
-        De un proyecto ambicioso a una de las universidades de ingeniería más influyentes del país.
-        Este es el camino que nos trajo hasta acá.
+        Detrás de estos 15 años hay historias concretas: primeras generaciones, primeras
+        profesiones, primeros territorios conquistados.
       </p>
 
-      <div class="timeline">
-        <div class="timeline-line" aria-hidden="true"></div>
-
-        <div class="timeline-item" data-reveal>
-          <div class="timeline-dot">2011</div>
-          <div class="timeline-card">
-            <h3>Fundación de UTEC</h3>
-            <p>Nace la Universidad de Ingeniería y Tecnología con la misión de formar líderes en ciencia y tecnología para transformar el Perú.</p>
+      <div class="story-grid">
+        <article class="story-card story-blue" data-reveal>
+          <div class="story-badge">
+            <svg viewBox="0 0 60 90"><ellipse cx="30" cy="32" rx="26" ry="30"/><polygon points="24,60 36,60 30,72"/></svg>
           </div>
-        </div>
-
-        <div class="timeline-item" data-reveal>
-          <div class="timeline-dot">2014</div>
-          <div class="timeline-card">
-            <h3>Primeras promociones</h3>
-            <p>Se consolidan las primeras carreras de ingeniería y comienza a crecer la comunidad de estudiantes e investigadores.</p>
-          </div>
-        </div>
-
-        <div class="timeline-item" data-reveal>
-          <div class="timeline-dot">2017</div>
-          <div class="timeline-card">
-            <h3>Nuevo campus e infraestructura</h3>
-            <p>Inauguramos instalaciones de vanguardia con laboratorios especializados y espacios de innovación abierta.</p>
-          </div>
-        </div>
-
-        <div class="timeline-item" data-reveal>
-          <div class="timeline-dot">2020</div>
-          <div class="timeline-card">
-            <h3>Innovación en tiempos de crisis</h3>
-            <p>La comunidad UTEC desarrolla soluciones tecnológicas frente a la pandemia, desde ventiladores hasta plataformas educativas.</p>
-          </div>
-        </div>
-
-        <div class="timeline-item" data-reveal>
-          <div class="timeline-dot">2023</div>
-          <div class="timeline-card">
-            <h3>Ecosistema de innovación</h3>
-            <p>UTEC Ventures y los centros de investigación impulsan startups y proyectos con impacto real en la industria.</p>
-          </div>
-        </div>
-
-        <div class="timeline-item timeline-highlight" data-reveal>
-          <div class="timeline-dot">2026</div>
-          <div class="timeline-card">
-            <h3>15 años transformando el Perú</h3>
-            <p>Celebramos una década y media formando ingenieros que construyen el futuro. Y esto recién empieza.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- LOGROS -->
-  <section id="logros" class="section logros">
-    <div class="container">
-      <p class="section-eyebrow" data-reveal>Impacto</p>
-      <h2 data-reveal>Números que cuentan nuestra historia</h2>
-
-      <div class="cards-grid">
-        <article class="stat-card" data-reveal>
-          <div class="stat-card-icon">🎓</div>
-          <h3>+9,000</h3>
-          <p>Egresados y estudiantes formados con visión innovadora y espíritu emprendedor.</p>
+          <h3>Primera Ingeniera Biomédica</h3>
+          <p>Una carrera pensada para resolver problemas reales de salud desde la tecnología.</p>
+          <span class="story-tag">UTEC · 15 años</span>
         </article>
-        <article class="stat-card" data-reveal>
-          <div class="stat-card-icon">🔬</div>
-          <h3>10 carreras</h3>
-          <p>Programas de ingeniería enfocados en las necesidades tecnológicas del país.</p>
+
+        <article class="story-card story-orange" data-reveal>
+          <div class="story-badge">
+            <svg viewBox="0 0 60 90"><ellipse cx="30" cy="32" rx="26" ry="30"/><polygon points="24,60 36,60 30,72"/></svg>
+          </div>
+          <h3>Primera generación universitaria de su familia</h3>
+          <p>Historias que abren camino y cambian, para siempre, el punto de partida de una familia.</p>
+          <span class="story-tag">UTEC · 15 años</span>
         </article>
-        <article class="stat-card" data-reveal>
-          <div class="stat-card-icon">🚀</div>
-          <h3>+80 startups</h3>
-          <p>Emprendimientos incubados y acelerados a través de UTEC Ventures.</p>
-        </article>
-        <article class="stat-card" data-reveal>
-          <div class="stat-card-icon">🌎</div>
-          <h3>Alianzas globales</h3>
-          <p>Convenios con universidades e instituciones líderes en ciencia y tecnología.</p>
-        </article>
-        <article class="stat-card" data-reveal>
-          <div class="stat-card-icon">💡</div>
-          <h3>Investigación aplicada</h3>
-          <p>Centros de investigación que desarrollan soluciones para la industria y el Estado.</p>
-        </article>
-        <article class="stat-card" data-reveal>
-          <div class="stat-card-icon">📈</div>
-          <h3>90% empleabilidad</h3>
-          <p>De nuestros egresados consiguen empleo o emprenden dentro del primer año.</p>
+
+        <article class="story-card story-purple" data-reveal>
+          <div class="story-badge">
+            <svg viewBox="0 0 60 90"><ellipse cx="30" cy="32" rx="26" ry="30"/><polygon points="24,60 36,60 30,72"/></svg>
+          </div>
+          <h3>Primera universidad en llegar a Cerro Largo</h3>
+          <p>Una universidad que crece desde el interior y lleva oportunidades a todo el país.</p>
+          <span class="story-tag">UTEC · 15 años</span>
         </article>
       </div>
-    </div>
-  </section>
-
-  <!-- ACTIVIDADES ANIVERSARIO -->
-  <section id="actividades" class="section actividades">
-    <div class="container">
-      <p class="section-eyebrow" data-reveal>Celebración 2026</p>
-      <h2 data-reveal>Actividades por nuestros 15 años</h2>
-      <p class="section-lead" data-reveal>Un año entero de eventos para celebrar junto a toda la comunidad UTEC.</p>
-
-      <div class="events-grid">
-        <article class="event-card" data-reveal>
-          <span class="event-tag">Marzo 2026</span>
-          <h3>Acto de apertura del aniversario</h3>
-          <p>Ceremonia especial con la comunidad UTEC: fundadores, docentes, estudiantes y egresados.</p>
-        </article>
-        <article class="event-card" data-reveal>
-          <span class="event-tag">Junio 2026</span>
-          <h3>Semana de la Innovación</h3>
-          <p>Exposición de proyectos, hackathon y feria de startups nacidas en UTEC Ventures.</p>
-        </article>
-        <article class="event-card" data-reveal>
-          <span class="event-tag">Setiembre 2026</span>
-          <h3>Encuentro de Egresados</h3>
-          <p>Reencuentro para celebrar el legado de quienes hoy transforman industrias desde UTEC.</p>
-        </article>
-        <article class="event-card" data-reveal>
-          <span class="event-tag">Noviembre 2026</span>
-          <h3>Gala 15 Años</h3>
-          <p>Evento central de celebración con reconocimientos a la trayectoria de la institución.</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- TESTIMONIOS -->
-  <section id="testimonios" class="section testimonios">
-    <div class="container">
-      <p class="section-eyebrow" data-reveal>Voces UTEC</p>
-      <h2 data-reveal>Lo que dice nuestra comunidad</h2>
-
-      <div class="testimonial-grid">
-        <blockquote class="testimonial-card" data-reveal>
-          <p>"UTEC me dio las herramientas para crear soluciones tecnológicas reales. Hoy lidero un equipo de ingeniería en una empresa que admiro."</p>
-          <footer>— Egresada, Ingeniería de Software</footer>
-        </blockquote>
-        <blockquote class="testimonial-card" data-reveal>
-          <p>"Formar parte de la primera década de UTEC fue un privilegio. Ver crecer a la institución en 15 años es emocionante."</p>
-          <footer>— Docente fundador</footer>
-        </blockquote>
-        <blockquote class="testimonial-card" data-reveal>
-          <p>"Gracias a UTEC Ventures pude convertir mi tesis en una startup. Hoy seguimos creciendo gracias a esa base."</p>
-          <footer>— Emprendedor, egresado UTEC</footer>
-        </blockquote>
-      </div>
+      <p class="story-note" data-reveal>* Reemplazá estos placeholders por fotografías reales de la comunidad UTEC.</p>
     </div>
   </section>
 
   <!-- CTA / CONTACTO -->
   <section id="contacto" class="section cta-section">
+    <div class="hero-pattern" aria-hidden="true"></div>
     <div class="container cta-inner">
-      <p class="section-eyebrow" data-reveal>Súmate a la celebración</p>
+      <p class="section-eyebrow eyebrow-light" data-reveal>Súmate a la celebración</p>
       <h2 data-reveal>Sé parte de los 15 años de UTEC</h2>
-      <p class="section-lead" data-reveal>
-        Déjanos tus datos y recibe el calendario completo de actividades del aniversario.
+      <p class="section-lead cta-lead" data-reveal>
+        Dejá tus datos y recibí las novedades de la campaña de aniversario &ldquo;Recién empezamos&rdquo;.
       </p>
 
       <form class="cta-form" id="ctaForm" data-reveal>
@@ -253,11 +205,11 @@
           <option value="" disabled selected>¿Cuál es tu vínculo con UTEC?</option>
           <option value="estudiante">Estudiante</option>
           <option value="egresado">Egresado/a</option>
-          <option value="postulante">Futuro postulante</option>
-          <option value="docente">Docente / Colaborador</option>
+          <option value="postulante">Futuro/a estudiante</option>
+          <option value="docente">Docente / Funcionario/a</option>
           <option value="otro">Otro</option>
         </select>
-        <button type="submit" class="btn btn-primary">Quiero recibir el calendario</button>
+        <button type="submit" class="btn btn-primary">Quiero sumarme</button>
       </form>
       <p class="form-note" id="formNote" role="status" aria-live="polite"></p>
     </div>
@@ -267,15 +219,20 @@
 <footer class="footer">
   <div class="container footer-inner">
     <div class="footer-brand">
-      <span class="logo-mark">UTEC</span>
-      <span class="logo-badge">15</span>
+      <svg class="logo-mark" viewBox="0 0 60 60" aria-hidden="true">
+        <g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round">
+          <polygon points="30,6 30,54" />
+          <polygon points="6.6,18 53.4,42" />
+          <polygon points="53.4,18 6.6,42" />
+        </g>
+      </svg>
+      <span>UTEC · Universidad Tecnológica</span>
     </div>
-    <p>© 2026 Universidad de Ingeniería y Tecnología. Celebrando 15 años de innovación.</p>
+    <p>Universidad Tecnológica del Uruguay — Campaña 15 años, &ldquo;Recién empezamos&rdquo;.</p>
     <div class="footer-links">
-      <a href="#historia">Historia</a>
-      <a href="#logros">Logros</a>
-      <a href="#actividades">Actividades</a>
-      <a href="#testimonios">Testimonios</a>
+      <a href="#porque">El claim</a>
+      <a href="#define">Quiénes somos</a>
+      <a href="#historias">Historias</a>
     </div>
   </div>
 </footer>
