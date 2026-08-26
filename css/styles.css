@@ -104,7 +104,7 @@ a { color: inherit; text-decoration: none; }
 .header:not(.scrolled) .logo-img-color { display: none; }
 .header:not(.scrolled) .logo-img-white { display: block; }
 
-.hero-logo { height: 64px; width: auto; margin: 0 auto 28px; display: block; }
+.hero-logo { height: 170px; width: auto; margin: 0 auto 36px; display: block; }
 
 .footer-logo { height: 30px; width: auto; display: block; }
 
@@ -139,18 +139,6 @@ a { color: inherit; text-decoration: none; }
 }
 .nav-toggle span { width: 22px; height: 2px; background: var(--color-ink); transition: 0.25s ease; }
 .header:not(.scrolled) .nav-toggle span { background: #fff; }
-
-/* ---------- Shared pattern background ---------- */
-.hero-pattern {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  opacity: 0.16;
-  background-image:
-    repeating-linear-gradient(45deg, rgba(255,255,255,0.9) 0 2px, transparent 2px 34px),
-    repeating-linear-gradient(-45deg, rgba(255,255,255,0.9) 0 2px, transparent 2px 34px);
-  mask-image: radial-gradient(circle at 50% 40%, black, transparent 85%);
-}
 
 /* ---------- Hero ---------- */
 .hero {
@@ -638,7 +626,7 @@ a { color: inherit; text-decoration: none; }
   .story-grid { grid-template-columns: 1fr; }
   .events-grid { grid-template-columns: 1fr; }
   .hitos-grid { grid-template-columns: repeat(2, 1fr); }
-  .hero-logo { height: 48px; }
+  .hero-logo { height: 96px; }
   .hero-tags { gap: 18px; }
   .section { padding: 76px 0; }
   .balloon { width: 50px; }
