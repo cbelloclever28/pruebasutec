@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>UTEC 15 años | Recién empezamos</title>
-<meta name="description" content="UTEC, la Universidad Tecnológica del Uruguay, cumple 15 años. Pública, tecnológica y cercana: conocé la campaña de aniversario 'Recién empezamos'.">
+<meta name="description" content="UTEC, la Universidad Tecnológica del Uruguay, cumple 15 años. Pública, tecnológica y cercana: conocé la campaña de aniversario 'Recién empezamos', los próximos eventos y los hitos de nuestra historia.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -17,31 +17,15 @@
 <header class="header" id="header">
   <div class="container header-inner">
     <a href="#" class="logo">
-      <svg class="logo-mark" viewBox="0 0 60 60" aria-hidden="true">
-        <g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round">
-          <polygon points="30,6 30,54" />
-          <polygon points="6.6,18 53.4,42" />
-          <polygon points="53.4,18 6.6,42" />
-        </g>
-        <g fill="currentColor" stroke="none">
-          <circle cx="30" cy="6" r="4" /><circle cx="30" cy="54" r="4" />
-          <circle cx="6.6" cy="18" r="4" /><circle cx="53.4" cy="42" r="4" />
-          <circle cx="53.4" cy="18" r="4" /><circle cx="6.6" cy="42" r="4" />
-          <circle cx="30" cy="30" r="4.5" />
-        </g>
-      </svg>
-      <span class="logo-word">UTEC</span>
-      <span class="logo-divider" aria-hidden="true"></span>
-      <span class="logo-anniv">
-        <span class="logo-anniv-label">años</span>
-        <span class="logo-anniv-number">15</span>
-      </span>
+      <img src="assets/utec-logo-color.png" alt="UTEC 15 años" class="logo-img logo-img-color">
+      <img src="assets/utec-logo-white.png" alt="UTEC 15 años" class="logo-img logo-img-white">
     </a>
     <nav class="nav" id="nav">
       <a href="#porque">El claim</a>
-      <a href="#define">Quiénes somos</a>
+      <a href="#eventos">Eventos</a>
+      <a href="#hitos">Hitos</a>
       <a href="#historias">Historias</a>
-      <a href="#contacto" class="nav-cta">Súmate</a>
+      <a href="#contacto" class="nav-cta">Contacto</a>
     </nav>
     <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">
       <span></span><span></span><span></span>
@@ -52,10 +36,6 @@
 <main>
   <!-- HERO -->
   <section class="hero">
-    <div class="hero-bg" aria-hidden="true">
-      <div class="hero-pattern"></div>
-    </div>
-
     <div class="hero-balloons" aria-hidden="true">
       <div class="balloon balloon-orange">
         <svg viewBox="0 0 60 90"><ellipse cx="30" cy="32" rx="28" ry="32"/><polygon points="24,62 36,62 30,74"/></svg>
@@ -72,9 +52,8 @@
     </div>
 
     <div class="container hero-inner">
-      <p class="eyebrow eyebrow-light" data-reveal>Universidad Tecnológica del Uruguay</p>
+      <img src="assets/utec-logo-white.png" alt="UTEC 15 años" class="hero-logo" data-reveal>
       <h1 class="hero-claim" data-reveal>
-        UTEC 15 años.<br>
         <span class="text-outline">Recién empezamos</span>
       </h1>
       <p class="hero-sub" data-reveal>
@@ -83,8 +62,8 @@
         algo simple — lo mejor todavía está por venir.
       </p>
       <div class="hero-actions" data-reveal>
-        <a href="#porque" class="btn btn-primary">Conocer el claim</a>
-        <a href="#historias" class="btn btn-ghost">Ver historias UTEC</a>
+        <a href="#eventos" class="btn btn-primary">Ver próximos eventos</a>
+        <a href="#hitos" class="btn btn-ghost">Ver los 15 hitos</a>
       </div>
 
       <div class="hero-tags" data-reveal>
@@ -120,7 +99,6 @@
 
   <!-- QUIÉNES SOMOS -->
   <section id="define" class="section define">
-    <div class="hero-pattern define-pattern" aria-hidden="true"></div>
     <div class="container">
       <p class="section-eyebrow eyebrow-light" data-reveal>Quiénes somos</p>
       <h2 class="define-title" data-reveal>Lo que nos define</h2>
@@ -143,6 +121,130 @@
           </p>
         </blockquote>
       </div>
+    </div>
+  </section>
+
+  <!-- PRÓXIMOS EVENTOS Y ACTIVIDADES -->
+  <section id="eventos" class="section eventos">
+    <div class="container">
+      <p class="section-eyebrow" data-reveal>Agenda 15 años</p>
+      <h2 data-reveal>Próximos eventos y actividades</h2>
+      <p class="section-lead" data-reveal>
+        Una agenda para celebrar en todo el país, del lanzamiento de la campaña al cierre
+        del año aniversario.
+      </p>
+
+      <div class="timeline-wrap">
+        <ol class="timeline" style="--timeline-count: 5;">
+          <li class="timeline-item" data-reveal style="--item-color: var(--color-blue);">
+            <span class="timeline-month">Marzo</span>
+            <span class="timeline-dot-row"><span class="timeline-dot"></span></span>
+            <div class="timeline-content">
+              <h3>Lanzamiento de los 15 años</h3>
+              <p>Intervención en fachadas de UTEC.</p>
+            </div>
+          </li>
+          <li class="timeline-item" data-reveal style="--item-color: var(--color-orange);">
+            <span class="timeline-month">Abril</span>
+            <span class="timeline-dot-row"><span class="timeline-dot"></span></span>
+            <div class="timeline-content">
+              <h3>Conferencia UTEC Talks</h3>
+              <p>Para toda la comunidad UTEC.</p>
+            </div>
+          </li>
+          <li class="timeline-item" data-reveal style="--item-color: var(--color-purple);">
+            <span class="timeline-month">Junio</span>
+            <span class="timeline-dot-row"><span class="timeline-dot"></span></span>
+            <div class="timeline-content">
+              <h3>Convocatoria para estudiantes</h3>
+            </div>
+          </li>
+          <li class="timeline-item" data-reveal style="--item-color: var(--color-blue);">
+            <span class="timeline-month">Agosto</span>
+            <span class="timeline-dot-row"><span class="timeline-dot"></span></span>
+            <div class="timeline-content">
+              <h3>Intervención de logo</h3>
+              <p>En plazas del interior del país.</p>
+            </div>
+          </li>
+          <li class="timeline-item" data-reveal style="--item-color: var(--color-orange);">
+            <span class="timeline-month">Setiembre</span>
+            <span class="timeline-dot-row"><span class="timeline-dot"></span></span>
+            <div class="timeline-content">
+              <h3>Evento multitudinario</h3>
+              <p>Estreno del audiovisual de campaña.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- VIDEOS DE INSTAGRAM -->
+  <section id="reels" class="section reels">
+    <div class="container">
+      <p class="section-eyebrow" data-reveal>En Instagram</p>
+      <h2 data-reveal>Mirá los videos de la campaña</h2>
+      <div class="reels-grid">
+        <div class="reel-embed" data-reveal>
+          <iframe src="https://www.instagram.com/p/Db_d7RWRTHp/embed/" loading="lazy" scrolling="no" frameborder="0" allowtransparent="true" allowfullscreen="true" title="Video de Instagram"></iframe>
+        </div>
+        <div class="reel-embed" data-reveal>
+          <iframe src="https://www.instagram.com/p/Db_d7RWRTHp/embed/" loading="lazy" scrolling="no" frameborder="0" allowtransparent="true" allowfullscreen="true" title="Video de Instagram"></iframe>
+        </div>
+        <div class="reel-embed" data-reveal>
+          <iframe src="https://www.instagram.com/p/Db_d7RWRTHp/embed/" loading="lazy" scrolling="no" frameborder="0" allowtransparent="true" allowfullscreen="true" title="Video de Instagram"></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NOTICIA DESTACADA -->
+  <section id="noticia" class="section noticia">
+    <div class="container">
+      <p class="section-eyebrow" data-reveal>Noticias</p>
+      <a href="noticias/utec-fray-bentos-10-anos.html" class="noticia-card" data-reveal>
+        <div class="noticia-card-media">
+          <img src="assets/noticia-fray-bentos.jpg" alt="Estudiantes de UTEC Fray Bentos trabajando en un laboratorio" class="noticia-card-img" loading="lazy">
+        </div>
+        <div class="noticia-card-body">
+          <span class="noticia-tag">Noticias</span>
+          <h3>UTEC Fray Bentos celebra 10 años con una jornada abierta a toda la comunidad</h3>
+          <p>El viernes 28 de agosto, la primera sede regional de UTEC en cumplir una década abre sus puertas con recorridos por laboratorios, un mural participativo, streaming en vivo y un escenario con artistas locales.</p>
+          <span class="noticia-read-more">Leer la nota completa &rarr;</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- 15 HITOS -->
+  <section id="hitos" class="section hitos">
+    <div class="container">
+      <p class="section-eyebrow eyebrow-light" data-reveal>Nuestra historia</p>
+      <h2 class="hitos-title" data-reveal>15 hitos que nos trajeron hasta acá</h2>
+      <p class="section-lead hitos-lead" data-reveal>
+        Quince años, quince momentos. Un recorrido para completar con los hechos que
+        marcaron el camino de UTEC.
+      </p>
+
+      <ol class="hitos-grid">
+        <li class="hito-card" data-reveal><span class="hito-number">01</span><p>Fundación de UTEC</p></li>
+        <li class="hito-card" data-reveal><span class="hito-number">02</span><p>Primeras carreras tecnológicas</p></li>
+        <li class="hito-card" data-reveal><span class="hito-number">03</span><p>Primera generación de egresados</p></li>
+        <li class="hito-card" data-reveal><span class="hito-number">04</span><p>Llegada a nuevos departamentos del interior</p></li>
+        <li class="hito-card" data-reveal><span class="hito-number">05</span><p>Nuevos campus y sedes regionales</p></li>
+        <li class="hito-card" data-reveal><span class="hito-number">06</span><p>Primeras alianzas con la industria</p></li>
+        <li class="hito-card" data-reveal><span class="hito-number">07</span><p>Primeros proyectos de investigación aplicada</p></li>
+        <li class="hito-card" data-reveal><span class="hito-number">08</span><p>Crecimiento de la comunidad docente</p></li>
+        <li class="hito-card" data-reveal><span class="hito-number">09</span><p>Nuevas ingenierías tecnológicas</p></li>
+        <li class="hito-card" data-reveal><span class="hito-number">10</span><p>Egresados liderando proyectos en la industria</p></li>
+        <li class="hito-card" data-reveal><span class="hito-number">11</span><p>Primeros vínculos internacionales</p></li>
+        <li class="hito-card" data-reveal><span class="hito-number">12</span><p>Proyectos con impacto en el territorio</p></li>
+        <li class="hito-card" data-reveal><span class="hito-number">13</span><p>Nuevas modalidades de estudio</p></li>
+        <li class="hito-card" data-reveal><span class="hito-number">14</span><p>Comunidad UTEC presente en todo el país</p></li>
+        <li class="hito-card hito-highlight" data-reveal><span class="hito-number">15</span><p>UTEC hoy: 15 años y recién empezando</p></li>
+      </ol>
+      <p class="story-note hitos-note" data-reveal>* Plantilla de 15 hitos — reemplazá cada uno con la fecha y el logro real de la institución.</p>
     </div>
   </section>
 
@@ -188,14 +290,14 @@
     </div>
   </section>
 
-  <!-- CTA / CONTACTO -->
+  <!-- CONTACTO -->
   <section id="contacto" class="section cta-section">
-    <div class="hero-pattern" aria-hidden="true"></div>
     <div class="container cta-inner">
-      <p class="section-eyebrow eyebrow-light" data-reveal>Súmate a la celebración</p>
-      <h2 data-reveal>Sé parte de los 15 años de UTEC</h2>
+      <p class="section-eyebrow eyebrow-light" data-reveal>Contacto</p>
+      <h2 data-reveal>¿Querés comunicarte con nosotros?</h2>
       <p class="section-lead cta-lead" data-reveal>
-        Dejá tus datos y recibí las novedades de la campaña de aniversario &ldquo;Recién empezamos&rdquo;.
+        Escribinos por dudas, propuestas o para sumarte a la campaña de los 15 años.
+        Te respondemos a la brevedad.
       </p>
 
       <form class="cta-form" id="ctaForm" data-reveal>
@@ -209,7 +311,8 @@
           <option value="docente">Docente / Funcionario/a</option>
           <option value="otro">Otro</option>
         </select>
-        <button type="submit" class="btn btn-primary">Quiero sumarme</button>
+        <textarea name="mensaje" rows="4" placeholder="Contanos en qué te podemos ayudar" required></textarea>
+        <button type="submit" class="btn btn-primary">Enviar mensaje</button>
       </form>
       <p class="form-note" id="formNote" role="status" aria-live="polite"></p>
     </div>
@@ -219,20 +322,14 @@
 <footer class="footer">
   <div class="container footer-inner">
     <div class="footer-brand">
-      <svg class="logo-mark" viewBox="0 0 60 60" aria-hidden="true">
-        <g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round">
-          <polygon points="30,6 30,54" />
-          <polygon points="6.6,18 53.4,42" />
-          <polygon points="53.4,18 6.6,42" />
-        </g>
-      </svg>
-      <span>UTEC · Universidad Tecnológica</span>
+      <img src="assets/utec-logo-white.png" alt="UTEC 15 años" class="footer-logo">
     </div>
     <p>Universidad Tecnológica del Uruguay — Campaña 15 años, &ldquo;Recién empezamos&rdquo;.</p>
     <div class="footer-links">
       <a href="#porque">El claim</a>
-      <a href="#define">Quiénes somos</a>
-      <a href="#historias">Historias</a>
+      <a href="#eventos">Eventos</a>
+      <a href="#hitos">Hitos</a>
+      <a href="#contacto">Contacto</a>
     </div>
   </div>
 </footer>
