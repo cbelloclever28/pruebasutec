@@ -29,7 +29,7 @@
   }
 
   // Scroll-spy: highlight the current chapter in the lateral nav
-  var navLinks = nav ? Array.prototype.slice.call(nav.querySelectorAll('a[href^="#"]')) : [];
+  var navLinks = nav ? Array.prototype.slice.call(nav.querySelectorAll("a.nav-chapter")) : [];
   var chapters = navLinks
     .map(function (link) { return document.getElementById(link.getAttribute("href").slice(1)); })
     .filter(Boolean);
