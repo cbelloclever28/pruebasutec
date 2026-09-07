@@ -63,13 +63,15 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   height: 100%; min-height: 100%; padding: 28px 24px 24px; gap: 8px;
 }
 .brand { display: flex; align-items: baseline; gap: 6px; font-weight: 800; font-size: 1.08rem; letter-spacing: 0.01em; color: var(--ink); margin-bottom: 26px; }
-.brand .e-mark { position: relative; display: inline-block; width: 0.62em; height: 1em; vertical-align: -0.08em; }
-.brand .e-mark::before, .brand .e-mark::after {
-  content: ""; position: absolute; left: 0; width: 100%; height: 38%; border-radius: 2px;
-}
-.brand .e-mark::before { top: 0; background: var(--purple); }
-.brand .e-mark::after { bottom: 0; background: var(--blue); }
 .brand small { display: block; font-weight: 600; font-size: 0.6em; color: var(--gray); letter-spacing: 0.08em; margin-top: 2px; }
+
+/* E-mark: the UTEC "Memoria" wordmark redraws the E as 3 disconnected bars
+   (no vertical spine). Proportions measured from the source PDF cover. */
+.e-mark { position: relative; display: inline-block; width: 0.6em; height: 0.86em; vertical-align: -0.05em; }
+.e-mark i { position: absolute; left: 0; border-radius: 1px; display: block; }
+.e-mark i:nth-child(1) { top: 0%; height: 9%; width: 100%; background: currentColor; }
+.e-mark i:nth-child(2) { top: 30%; height: 9%; width: 65%; background: var(--purple); }
+.e-mark i:nth-child(3) { top: 60%; height: 9%; width: 87%; background: var(--blue); }
 
 .nav { display: flex; flex-direction: column; align-items: stretch; gap: 2px; width: 100%; flex: 1; overflow-y: auto; }
 .nav-group { display: flex; flex-direction: column; margin-bottom: 6px; }
@@ -112,12 +114,7 @@ body > main, body > footer { margin-left: var(--sidebar-w); }
 .hero-cover-inner { position: relative; z-index: 2; width: 100%; text-align: center; padding: 90px 24px; }
 .hero-wordmark { font-weight: 800; line-height: 0.94; letter-spacing: -0.01em; }
 .hero-wordmark .l1 { font-size: clamp(3.2rem, 10vw, 7.2rem); display: block; }
-.hero-wordmark .l1 .e-mark { position: relative; display: inline-block; width: 0.56em; height: 0.86em; vertical-align: -0.04em; margin: 0 0.01em; }
-.hero-wordmark .l1 .e-mark::before, .hero-wordmark .l1 .e-mark::after {
-  content: ""; position: absolute; left: 2%; width: 96%; height: 40%; border-radius: 4px;
-}
-.hero-wordmark .l1 .e-mark::before { top: 6%; background: var(--purple); }
-.hero-wordmark .l1 .e-mark::after { bottom: 6%; background: var(--blue); }
+.hero-wordmark .l1 .e-mark { width: 0.56em; margin: 0 0.01em; }
 .hero-wordmark .l2 { font-size: clamp(2rem, 6vw, 4rem); display: block; margin-top: 0.15em; color: var(--ink); }
 .hero-sub {
   margin: 34px auto 0; max-width: 640px; color: var(--ink-soft); font-size: 1.08rem; line-height: 1.65;
