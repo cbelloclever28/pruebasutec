@@ -28,6 +28,28 @@
     });
   }
 
+  // Scroll-spy: highlight the current chapter in the lateral nav
+  var navLinks = nav ? Array.prototype.slice.call(nav.querySelectorAll('a[href^="#"]')) : [];
+  var chapters = navLinks
+    .map(function (link) { return document.getElementById(link.getAttribute("href").slice(1)); })
+    .filter(Boolean);
+  if ("IntersectionObserver" in window && chapters.length) {
+    var spy = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          var link = nav.querySelector('a[href="#' + entry.target.id + '"]');
+          if (!link) return;
+          if (entry.isIntersecting) {
+            navLinks.forEach(function (l) { l.classList.remove("is-active"); });
+            link.classList.add("is-active");
+          }
+        });
+      },
+      { rootMargin: "-40% 0px -55% 0px", threshold: 0 }
+    );
+    chapters.forEach(function (el) { spy.observe(el); });
+  }
+
   // Reveal on scroll
   var revealEls = document.querySelectorAll("[data-reveal]");
   if ("IntersectionObserver" in window && revealEls.length) {
