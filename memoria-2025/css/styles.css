@@ -37,6 +37,7 @@ body {
 img { max-width: 100%; display: block; }
 a { color: inherit; text-decoration: none; }
 ul, ol { margin: 0; padding: 0; list-style: none; }
+button, input, textarea, select { font-family: inherit; }
 .container { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
 
 /* ---------- progress bar ---------- */
@@ -66,8 +67,11 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .brand small { display: block; font-weight: 600; font-size: 0.6em; color: var(--gray); letter-spacing: 0.08em; margin-top: 2px; }
 
 /* E-mark: the UTEC "Memoria" wordmark redraws the E as 3 disconnected bars
-   (no vertical spine). Proportions measured from the source PDF cover. */
-.e-mark { position: relative; display: inline-block; width: 0.6em; height: 0.86em; vertical-align: -0.05em; }
+   (no vertical spine). Proportions measured from the source PDF cover.
+   Height is set to Poppins ExtraBold's own cap-height (measured empirically)
+   with default baseline alignment, so the box sits flush with the other
+   capital letters instead of floating above them. */
+.e-mark { position: relative; display: inline-block; width: 0.6em; height: 0.683em; vertical-align: 0; }
 .e-mark i { position: absolute; left: 0; border-radius: 1px; display: block; }
 .e-mark i:nth-child(1) { top: 0%; height: 9%; width: 100%; background: currentColor; }
 .e-mark i:nth-child(2) { top: 30%; height: 9%; width: 65%; background: var(--purple); }
