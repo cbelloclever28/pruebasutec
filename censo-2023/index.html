@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Censo de Estudiantes UTEC 2025</title>
+<meta name="description" content="Quiénes son, dónde viven y cómo estudian los 3231 estudiantes de UTEC censados en 2025. Infografía interactiva a partir del Censo Anual de Estudiantes de UTEC Innova.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<header class="header" id="header">
+  <div class="container header-inner">
+    <a href="#" class="logo">Censo&nbsp;UTEC <span>2025</span></a>
+    <nav class="nav" id="nav">
+      <a href="#mapa">Mapa</a>
+      <a href="#quienes-son">Quiénes son</a>
+      <a href="#hogar">Hogar</a>
+      <a href="#economia">Economía</a>
+      <a href="#educacion">Educación</a>
+      <a href="#laboral">Trabajo</a>
+      <a href="#carreras">Carreras</a>
+      <a href="#itr">Por ITR</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="container hero-inner">
+      <p class="hero-eyebrow" data-reveal>UTEC Innova · Evaluación y Estadística</p>
+      <h1 class="hero-title" data-reveal>
+        Quiénes son los <span class="text-accent">3231 estudiantes</span> de UTEC
+      </h1>
+      <p class="hero-sub" data-reveal>
+        El Censo Anual de Estudiantes 2025 relevó a la población de pregrado y grado de la
+        Universidad Tecnológica del Uruguay: de dónde vienen, cómo viven, cuánto trabajan y
+        qué estudian. Esta página traduce ese informe en una infografía interactiva.
+      </p>
+      <div class="hero-actions" data-reveal>
+        <a href="#mapa" class="btn btn-primary">Explorar el mapa</a>
+        <a href="#fuentes" class="btn btn-ghost">Ver la fuente</a>
+      </div>
+    </div>
+    <a href="#kpis" class="scroll-cue" aria-hidden="true"><span></span></a>
+  </section>
+
+  <!-- KPI STRIP -->
+  <section id="kpis" class="section kpis">
+    <div class="container">
+      <div class="kpi-grid">
+        <div class="kpi-card" data-reveal>
+          <span class="kpi-value" data-counter="3231">0</span>
+          <span class="kpi-label">estudiantes censados</span>
+        </div>
+        <div class="kpi-card" data-reveal>
+          <span class="kpi-value" data-counter="94" data-suffix="%">0</span>
+          <span class="kpi-label">cobertura del censo</span>
+        </div>
+        <div class="kpi-card" data-reveal>
+          <span class="kpi-value" data-counter="17">0</span>
+          <span class="kpi-label">carreras de pregrado y grado</span>
+        </div>
+        <div class="kpi-card" data-reveal>
+          <span class="kpi-value" data-counter="4">0</span>
+          <span class="kpi-label">Institutos Tecnológicos Regionales</span>
+        </div>
+        <div class="kpi-card" data-reveal>
+          <span class="kpi-value" data-counter="209">0</span>
+          <span class="kpi-label">localidades de residencia</span>
+        </div>
+        <div class="kpi-card" data-reveal>
+          <span class="kpi-value" data-counter="83" data-suffix="%">0</span>
+          <span class="kpi-label">primera generación universitaria</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAPA -->
+  <section id="mapa" class="section section-alt">
+    <div class="container">
+      <p class="section-eyebrow" data-reveal>Territorio</p>
+      <h2 data-reveal>¿Dónde viven los estudiantes de UTEC?</h2>
+      <p class="section-lead" data-reveal>
+        UTEC es una universidad del interior: sus cuatro institutos regionales (Suroeste, Centro
+        Sur, Norte y Este) explican por qué la matrícula se concentra fuera de Montevideo.
+        Tocá o pasá el mouse por cada departamento para ver el porcentaje de estudiantes que
+        residen ahí en 2025.
+      </p>
+
+      <div class="map-layout">
+        <div class="map-wrap" data-reveal>
+          <div class="tile-map" id="tileMap" role="img" aria-label="Mapa esquemático de Uruguay por departamento"></div>
+          <p class="map-caption">Mapa esquemático por departamento (posiciones relativas, no cartografía precisa). Color = % de estudiantes residentes.</p>
+          <div class="map-legend" id="mapLegend"></div>
+        </div>
+        <div class="map-detail" id="mapDetail" data-reveal>
+          <p class="map-detail-hint">Elegí un departamento para ver el detalle.</p>
+        </div>
+      </div>
+
+      <div class="map-facts">
+        <div class="fact-card" data-reveal>
+          <span class="fact-num">52%</span>
+          <span class="fact-text">de los estudiantes debe trasladarse regularmente para asistir a clases.</span>
+        </div>
+        <div class="fact-card" data-reveal>
+          <span class="fact-num">18,3%</span>
+          <span class="fact-text">vive en Río Negro — el departamento con más estudiantes residentes, subiendo de 10,8% en 2015.</span>
+        </div>
+        <div class="fact-card" data-reveal>
+          <span class="fact-num">12,5%</span>
+          <span class="fact-text">vive en Rivera, que pasó de apenas 2,7% en 2015 con la apertura del ITR Norte.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIENES SON -->
+  <section id="quienes-son" class="section">
+    <div class="container">
+      <p class="section-eyebrow" data-reveal>Perfil sociodemográfico</p>
+      <h2 data-reveal>Quiénes son</h2>
+      <p class="section-lead" data-reveal>
+        Dos de cada tres estudiantes son varones, aunque la brecha se achica año a año. La edad
+        típica ronda los 20 años y casi todos nacieron en Uruguay.
+      </p>
+
+      <div class="grid-2" data-reveal>
+        <div class="chart-card">
+          <h3>Razón de sexos <span class="chart-sub">mujeres cada 100 varones · 2015–2025</span></h3>
+          <div class="chart-body" id="chartRazonSexos"></div>
+        </div>
+        <div class="chart-card">
+          <h3>Sexo de los estudiantes <span class="chart-sub">Censo 2025</span></h3>
+          <div class="chart-body split-bar" id="chartSexoSplit"></div>
+          <p class="chart-note">66% masculino · 34% femenino. La proporción de mujeres subió del 31% (2022) al 34% (2025).</p>
+        </div>
+      </div>
+
+      <div class="grid-2" data-reveal>
+        <div class="chart-card">
+          <h3>Edad de los estudiantes <span class="chart-sub">por tramos · 2025</span></h3>
+          <div class="chart-body" id="chartTramosEdad"></div>
+        </div>
+        <div class="chart-card">
+          <h3>Edad promedio <span class="chart-sub">2015–2025</span></h3>
+          <div class="chart-body" id="chartEdadEvol"></div>
+        </div>
+      </div>
+
+      <div class="stat-trio" data-reveal>
+        <div class="stat-box"><b>25</b><span>años en promedio</span></div>
+        <div class="stat-box"><b>22</b><span>años, la mediana</span></div>
+        <div class="stat-box"><b>20</b><span>años, la edad más común</span></div>
+      </div>
+
+      <div class="chart-card" data-reveal>
+        <h3>Ascendencia étnico-racial <span class="chart-sub">categorías no excluyentes · Censo 2025</span></h3>
+        <div class="chart-body" id="chartAscendencia"></div>
+        <p class="chart-note">96% de los estudiantes se reconoce con ascendencia blanca, 19% indígena, 16% afro o negra y 3% asiática (un estudiante puede marcar más de una).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOGAR -->
+  <section id="hogar" class="section section-alt">
+    <div class="container">
+      <p class="section-eyebrow" data-reveal>Hogar y familia</p>
+      <h2 data-reveal>Con quién viven</h2>
+      <p class="section-lead" data-reveal>
+        Más de la mitad todavía vive con sus padres, pero la proporción de estudiantes que vive
+        sola viene en aumento sostenido desde 2015.
+      </p>
+
+      <div class="grid-2" data-reveal>
+        <div class="chart-card">
+          <h3>Tipo de hogar <span class="chart-sub">Censo 2025</span></h3>
+          <div class="chart-body" id="chartTipoHogar"></div>
+        </div>
+        <div class="chart-card">
+          <h3>Con quién conviven <span class="chart-sub">evolución 2015–2025</span></h3>
+          <div class="chart-body" id="chartHogarEvol"></div>
+        </div>
+      </div>
+
+      <div class="map-facts" data-reveal>
+        <div class="fact-card">
+          <span class="fact-num">11%</span>
+          <span class="fact-text">tiene hijos — 15% de las mujeres frente a 9% de los varones.</span>
+        </div>
+        <div class="fact-card">
+          <span class="fact-num">83%</span>
+          <span class="fact-text">es la primera generación de su familia en llegar a la universidad.</span>
+        </div>
+        <div class="fact-card">
+          <span class="fact-num">52%</span>
+          <span class="fact-text">proviene de un hogar con clima educativo bajo (madre sin secundaria completa).</span>
+        </div>
+      </div>
+
+      <div class="chart-card" data-reveal>
+        <h3>Clima educativo del hogar de origen <span class="chart-sub">evolución 2015–2025</span></h3>
+        <div class="chart-body" id="chartClimaEducativo"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ECONOMIA -->
+  <section id="economia" class="section">
+    <div class="container">
+      <p class="section-eyebrow" data-reveal>Situación socioeconómica</p>
+      <h2 data-reveal>Cómo se sostienen</h2>
+      <p class="section-lead" data-reveal>
+        Por primera vez en la serie, en 2025 el aporte familiar superó al trabajo propio como
+        principal fuente de ingresos de los estudiantes.
+      </p>
+
+      <div class="chart-card" data-reveal>
+        <h3>Origen de los recursos para gastos personales <span class="chart-sub">evolución 2015–2025</span></h3>
+        <div class="chart-body" id="chartRecursos"></div>
+      </div>
+
+      <div class="grid-2" data-reveal>
+        <div class="chart-card">
+          <h3>Índice de Nivel Socioeconómico (INSE) <span class="chart-sub">Censo 2025</span></h3>
+          <div class="chart-body" id="chartInse"></div>
+          <p class="chart-note">34% vive en hogares de INSE bajo, 53% medio y 13% alto.</p>
+        </div>
+        <div class="chart-card highlight-card">
+          <h3>Ingresos</h3>
+          <ul class="fact-list">
+            <li><b>6%</b> de los estudiantes accede a una beca, su principal fuente de recursos.</li>
+            <li><b>61%</b> de quienes trabajan gana menos de $40.000 uruguayos por mes.</li>
+            <li><b>19%</b> vive en hogares con ingresos por debajo de $20.000 mensuales.</li>
+            <li>El tramo de ingreso del hogar más común es <b>$30.001 a $40.000</b> mensuales.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EDUCACION -->
+  <section id="educacion" class="section section-alt">
+    <div class="container">
+      <p class="section-eyebrow" data-reveal>Trayectoria educativa</p>
+      <h2 data-reveal>De dónde vienen académicamente</h2>
+      <p class="section-lead" data-reveal>
+        La gran mayoría cursó toda su educación en instituciones públicas y llegó a UTEC poco
+        después de terminar el liceo.
+      </p>
+
+      <div class="stat-trio" data-reveal>
+        <div class="stat-box"><b>87%</b><span>hizo primaria pública</span></div>
+        <div class="stat-box"><b>86%</b><span>hizo media básica pública</span></div>
+        <div class="stat-box"><b>94%</b><span>hizo bachillerato público</span></div>
+      </div>
+
+      <div class="grid-2" data-reveal>
+        <div class="chart-card">
+          <h3>Institución de Educación Media Superior <span class="chart-sub">evolución 2015–2025</span></h3>
+          <div class="chart-body" id="chartEmsInstitucion"></div>
+        </div>
+        <div class="chart-card">
+          <h3>Orientación cursada en el liceo <span class="chart-sub">Censo 2025</span></h3>
+          <div class="chart-body" id="chartOrientacionLiceo"></div>
+        </div>
+      </div>
+
+      <div class="grid-2" data-reveal>
+        <div class="chart-card">
+          <h3>Estudios terciarios previos <span class="chart-sub">Censo 2025</span></h3>
+          <div class="chart-body" id="chartTerciarioDonde"></div>
+          <p class="chart-note">29% de los estudiantes ya había cursado algo terciario antes de entrar a UTEC; solo un 10% había obtenido un título.</p>
+        </div>
+        <div class="chart-card">
+          <h3>Área de esos estudios previos <span class="chart-sub">Censo 2025</span></h3>
+          <div class="chart-body" id="chartTerciarioArea"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LABORAL -->
+  <section id="laboral" class="section">
+    <div class="container">
+      <p class="section-eyebrow" data-reveal>Perfil laboral</p>
+      <h2 data-reveal>Cuánto y en qué trabajan</h2>
+      <p class="section-lead" data-reveal>
+        La proporción de estudiantes que trabaja cayó a la mitad desde 2016 — un cambio
+        estructural que coincide con más aporte familiar y más becas.
+      </p>
+
+      <div class="chart-card" data-reveal>
+        <h3>Estudiantes que trabajan <span class="chart-sub">evolución 2015–2025</span></h3>
+        <div class="chart-body" id="chartTrabajaEvol"></div>
+      </div>
+
+      <div class="grid-2" data-reveal>
+        <div class="chart-card">
+          <h3>Categoría del trabajo actual <span class="chart-sub">evolución 2015–2025</span></h3>
+          <div class="chart-body" id="chartCategoriaOcupacional"></div>
+        </div>
+        <div class="chart-card">
+          <h3>Horas de trabajo semanales <span class="chart-sub">Censo 2025</span></h3>
+          <div class="chart-body" id="chartHorasTrabajo"></div>
+        </div>
+      </div>
+
+      <div class="grid-2" data-reveal>
+        <div class="chart-card">
+          <h3>Relación del trabajo con la carrera <span class="chart-sub">evolución 2015–2025</span></h3>
+          <div class="chart-body" id="chartRelacionCarrera"></div>
+        </div>
+        <div class="chart-card">
+          <h3>Ocupación actual <span class="chart-sub">principales categorías · 2025</span></h3>
+          <div class="chart-body" id="chartOcupacion"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CARRERAS -->
+  <section id="carreras" class="section section-alt">
+    <div class="container">
+      <p class="section-eyebrow" data-reveal>Matrícula y carreras</p>
+      <h2 data-reveal>Qué estudian</h2>
+      <p class="section-lead" data-reveal>
+        La matrícula de UTEC creció fuerte en los últimos años: 4 de cada 10 estudiantes de 2025
+        ingresaron ese mismo año.
+      </p>
+
+      <div class="chart-card" data-reveal>
+        <h3>Generación de ingreso <span class="chart-sub">estudiantes 2025 según año en que ingresaron</span></h3>
+        <div class="chart-body" id="chartGeneracionIngreso"></div>
+      </div>
+
+      <div class="chart-card" data-reveal>
+        <h3>Matrícula por carrera <span class="chart-sub">Censo 2025</span></h3>
+        <div class="chart-body" id="chartCarreras"></div>
+      </div>
+
+      <div class="grid-2" data-reveal>
+        <div class="chart-card">
+          <h3>Tipo de titulación <span class="chart-sub">Censo 2025</span></h3>
+          <div class="chart-body" id="chartTitulacion"></div>
+        </div>
+        <div class="chart-card">
+          <h3>Modalidad de cursada <span class="chart-sub">Censo 2025</span></h3>
+          <div class="chart-body" id="chartModalidad"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ITR -->
+  <section id="itr" class="section">
+    <div class="container">
+      <p class="section-eyebrow" data-reveal>Los cuatro institutos</p>
+      <h2 data-reveal>Un perfil distinto en cada ITR</h2>
+      <p class="section-lead" data-reveal>
+        UTEC estudia en el territorio a través de cuatro Institutos Tecnológicos Regionales.
+        Cada uno tiene una historia, un tamaño y un perfil de estudiante propio.
+      </p>
+      <div class="itr-grid" id="itrGrid"></div>
+    </div>
+  </section>
+
+  <!-- CIERRE -->
+  <section class="section section-alt closing">
+    <div class="container">
+      <p class="section-eyebrow" data-reveal>En síntesis</p>
+      <h2 data-reveal>Diez años de censos, un cambio de perfil</h2>
+      <div class="closing-grid" id="closingGrid"></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer" id="fuentes">
+  <div class="container footer-inner">
+    <p class="footer-title">Sobre esta página</p>
+    <p class="footer-text">
+      Los datos provienen del <b>Informe Censo de Estudiantes 2025</b>, elaborado por UTEC
+      Innova (Programa de Evaluación y Estadística, Departamento de Innovación y
+      Emprendimiento). El documento original fue compartido como imágenes de página y
+      transcripto a este dataset — están disponibles en
+      <code>censo-2023/fuente/</code> en este mismo repositorio para verificar cualquier cifra.
+      Algunos porcentajes por departamento en el mapa se leyeron de un gráfico y pueden tener
+      un margen de redondeo menor a un punto porcentual.
+    </p>
+    <p class="footer-text">Esta no es una página oficial de UTEC; es una visualización independiente construida a partir del informe.</p>
+    <div class="footer-links">
+      <a href="#mapa">Mapa</a>
+      <a href="#quienes-son">Quiénes son</a>
+      <a href="#itr">Por ITR</a>
+      <a href="../index.html">Sitio de UTEC 15 años</a>
+    </div>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
