@@ -65,28 +65,56 @@ function seqColor(pct, max) {
 }
 
 function initTileMap() {
-  const data = CENSO.residenciaDepartamento;
-  const max = Math.max(...data.map(d => d.pct));
-  const mapEl = document.getElementById("tileMap");
+  const byId = {};
+  CENSO.residenciaDepartamento.forEach(d => { byId[d.id] = d; });
+  const max = Math.max(...CENSO.residenciaDepartamento.map(d => d.pct));
+
+  const svg = document.getElementById("uyMap");
+  const wrap = svg.closest(".map-wrap");
   const detailEl = document.getElementById("mapDetail");
   const legendEl = document.getElementById("mapLegend");
 
-  data.forEach(dep => {
-    const tile = el("button", "tile");
-    tile.style.gridColumn = dep.col;
-    tile.style.gridRow = dep.row;
-    tile.style.background = seqColor(dep.pct, max);
-    tile.style.color = dep.pct / max > 0.55 ? "#fff" : "#1c2027";
-    tile.innerHTML = `<span class="tile-name">${dep.nombre}</span><span class="tile-pct">${fmtPct(dep.pct, 1)}</span>`;
-    tile.setAttribute("aria-label", `${dep.nombre}: ${fmtPct(dep.pct, 1)} de estudiantes residentes`);
-    tile.addEventListener("click", () => selectDept(dep, tile));
-    tile.addEventListener("mouseenter", () => selectDept(dep, tile, true));
-    mapEl.append(tile);
+  const tooltip = el("div", "uy-map-tooltip");
+  wrap.append(tooltip);
+
+  const svgNS = "http://www.w3.org/2000/svg";
+  svg.setAttribute("viewBox", URUGUAY_DEPT_PATHS.viewBox);
+
+  URUGUAY_DEPT_PATHS.features.forEach(feat => {
+    const dep = byId[feat.id];
+    if (!dep) return;
+    const path = document.createElementNS(svgNS, "path");
+    path.setAttribute("d", feat.d);
+    path.setAttribute("class", "uy-dept");
+    path.setAttribute("fill", seqColor(dep.pct, max));
+    path.setAttribute("tabindex", "0");
+    path.setAttribute("role", "button");
+    path.setAttribute("aria-label", `${dep.nombre}: ${fmtPct(dep.pct, 1)} de estudiantes residentes`);
+    path.addEventListener("click", () => selectDept(dep, path));
+    path.addEventListener("mouseenter", (e) => { showTooltip(feat, dep); selectDept(dep, path, true); });
+    path.addEventListener("mousemove", (e) => moveTooltip(e));
+    path.addEventListener("mouseleave", () => tooltip.classList.remove("show"));
+    path.addEventListener("focus", () => selectDept(dep, path, true));
+    svg.append(path);
   });
 
-  function selectDept(dep, tile, hover) {
-    if (!hover) mapEl.querySelectorAll(".tile").forEach(t => t.classList.remove("is-active"));
-    if (!hover) tile.classList.add("is-active");
+  // Small departments (Montevideo, Flores, etc.) get a leader-line-free label
+  // only when there's room; skipped here in favor of the hover tooltip so
+  // tiny shapes stay legible.
+
+  function showTooltip(feat, dep) {
+    tooltip.textContent = `${dep.nombre}: ${fmtPct(dep.pct, 1)}`;
+    tooltip.classList.add("show");
+  }
+  function moveTooltip(e) {
+    const r = wrap.getBoundingClientRect();
+    tooltip.style.left = (e.clientX - r.left) + "px";
+    tooltip.style.top = (e.clientY - r.top) + "px";
+  }
+
+  function selectDept(dep, path, hover) {
+    if (!hover) svg.querySelectorAll(".uy-dept").forEach(p => p.classList.remove("is-active"));
+    if (!hover) path.classList.add("is-active");
     detailEl.innerHTML = `
       <h4>${dep.nombre}</h4>
       <span class="md-pct">${fmtPct(dep.pct, 1)}</span>

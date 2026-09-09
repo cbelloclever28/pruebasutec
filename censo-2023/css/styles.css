@@ -214,20 +214,26 @@ ul { margin: 0; padding: 0; list-style: none; }
 /* ---------- Tile map ---------- */
 .map-layout { display: grid; grid-template-columns: 1.15fr 1fr; gap: 30px; align-items: start; }
 @media (max-width: 900px) { .map-layout { grid-template-columns: 1fr; } }
+.map-wrap { position: relative; }
 
-.tile-map {
-  display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(6, 56px);
-  gap: 5px; max-width: 380px;
+.uy-map { width: 100%; max-width: 460px; height: auto; display: block; }
+.uy-dept {
+  cursor: pointer; stroke: #fff; stroke-width: 1.5; stroke-linejoin: round;
+  transition: filter .15s ease, stroke-width .15s ease;
 }
-.tile {
-  border-radius: 9px; border: 1px solid rgba(255,255,255,0.6); cursor: pointer;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  font-size: 0.6rem; font-weight: 700; color: #fff; text-align: center; padding: 2px;
-  transition: transform .15s ease, box-shadow .15s ease; line-height: 1.15;
+.uy-dept:hover, .uy-dept:focus-visible, .uy-dept.is-active {
+  filter: brightness(1.12); stroke: var(--ink); stroke-width: 2.5; outline: none;
 }
-.tile:hover, .tile:focus-visible, .tile.is-active { transform: scale(1.06); box-shadow: 0 6px 16px -6px rgba(0,0,0,0.4); outline: none; z-index: 2; position: relative; }
-.tile-name { font-size: 0.56rem; opacity: 0.92; }
-.tile-pct { font-size: 0.72rem; }
+.uy-dept-label {
+  font-size: 9px; font-weight: 600; fill: var(--ink); text-anchor: middle;
+  pointer-events: none; paint-order: stroke; stroke: #fff; stroke-width: 3px; stroke-linejoin: round;
+}
+.uy-map-tooltip {
+  position: absolute; pointer-events: none; background: var(--ink); color: #fff; font-size: 0.78rem;
+  padding: 7px 11px; border-radius: 8px; white-space: nowrap; opacity: 0; transition: opacity .12s ease;
+  z-index: 5; transform: translate(-50%, -120%); font-weight: 600;
+}
+.uy-map-tooltip.show { opacity: 1; }
 
 .map-caption { font-size: 0.78rem; color: var(--text-muted); margin-top: 12px; }
 .map-legend { display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 0.75rem; color: var(--text-muted); }

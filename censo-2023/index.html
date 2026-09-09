@@ -102,8 +102,8 @@
 
       <div class="map-layout">
         <div class="map-wrap" data-reveal>
-          <div class="tile-map" id="tileMap" role="img" aria-label="Mapa esquemático de Uruguay por departamento"></div>
-          <p class="map-caption">Mapa esquemático por departamento (posiciones relativas, no cartografía precisa). Color = % de estudiantes residentes.</p>
+          <svg class="uy-map" id="uyMap" viewBox="0 0 800 867.8" role="img" aria-label="Mapa de Uruguay por departamento"></svg>
+          <p class="map-caption">Color = % de estudiantes residentes en 2025. Mapa: amCharts geodata.</p>
           <div class="map-legend" id="mapLegend"></div>
         </div>
         <div class="map-detail" id="mapDetail" data-reveal>
@@ -402,6 +402,7 @@
       un margen de redondeo menor a un punto porcentual.
     </p>
     <p class="footer-text">Esta no es una página oficial de UTEC; es una visualización independiente construida a partir del informe.</p>
+    <p class="footer-text">Límites departamentales del mapa: <a href="https://github.com/amcharts/amcharts4-geodata" style="text-decoration:underline;">amCharts Geo Data</a> (uso libre con atribución).</p>
     <div class="footer-links">
       <a href="#mapa">Mapa</a>
       <a href="#quienes-son">Quiénes son</a>
@@ -412,6 +413,7 @@
 </footer>
 
 <script src="js/data.js"></script>
+<script src="js/uruguay-map.js"></script>
 <script src="js/charts.js"></script>
 <script src="js/main.js"></script>
 </body>
