@@ -67,15 +67,15 @@ button, input, textarea, select { font-family: inherit; }
 .brand small { display: block; font-weight: 600; font-size: 0.6em; color: var(--gray); letter-spacing: 0.08em; margin-top: 2px; }
 
 /* E-mark: the UTEC "Memoria" wordmark redraws the E as 3 disconnected bars
-   (no vertical spine). Proportions measured from the source PDF cover.
-   Height is set to Poppins ExtraBold's own cap-height (measured empirically)
-   with default baseline alignment, so the box sits flush with the other
-   capital letters instead of floating above them. */
+   (no vertical spine). Height matches Poppins ExtraBold's own cap-height
+   with default baseline alignment, so the box spans the same top-to-baseline
+   space as the other capital letters. The 3 bars are spread evenly across
+   that full height instead of only the top portion. */
 .e-mark { position: relative; display: inline-block; width: 0.667em; height: 0.683em; vertical-align: 0; }
 .e-mark i { position: absolute; left: 0; border-radius: 1px; display: block; }
-.e-mark i:nth-child(1) { top: 0%; height: 9%; width: 100%; background: currentColor; }
-.e-mark i:nth-child(2) { top: 30%; height: 9%; width: 65%; background: var(--purple); }
-.e-mark i:nth-child(3) { top: 60%; height: 9%; width: 87%; background: var(--blue); }
+.e-mark i:nth-child(1) { top: 0%; height: 12%; width: 100%; background: currentColor; }
+.e-mark i:nth-child(2) { top: 44%; height: 12%; width: 65%; background: var(--purple); }
+.e-mark i:nth-child(3) { top: 88%; height: 12%; width: 87%; background: var(--blue); }
 
 .nav { display: flex; flex-direction: column; align-items: stretch; gap: 2px; width: 100%; flex: 1; overflow-y: auto; }
 .nav-group { display: flex; flex-direction: column; margin-bottom: 6px; }
