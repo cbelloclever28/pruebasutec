@@ -71,7 +71,7 @@ button, input, textarea, select { font-family: inherit; }
    Height is set to Poppins ExtraBold's own cap-height (measured empirically)
    with default baseline alignment, so the box sits flush with the other
    capital letters instead of floating above them. */
-.e-mark { position: relative; display: inline-block; width: 0.6em; height: 0.683em; vertical-align: 0; }
+.e-mark { position: relative; display: inline-block; width: 0.667em; height: 0.683em; vertical-align: 0; }
 .e-mark i { position: absolute; left: 0; border-radius: 1px; display: block; }
 .e-mark i:nth-child(1) { top: 0%; height: 9%; width: 100%; background: currentColor; }
 .e-mark i:nth-child(2) { top: 30%; height: 9%; width: 65%; background: var(--purple); }
@@ -118,7 +118,6 @@ body > main, body > footer { margin-left: var(--sidebar-w); }
 .hero-cover-inner { position: relative; z-index: 2; width: 100%; text-align: center; padding: 90px 24px; }
 .hero-wordmark { font-weight: 800; line-height: 0.94; letter-spacing: -0.01em; }
 .hero-wordmark .l1 { font-size: clamp(3.2rem, 10vw, 7.2rem); display: block; }
-.hero-wordmark .l1 .e-mark { width: 0.56em; margin: 0 0.01em; }
 .hero-wordmark .l2 { font-size: clamp(2rem, 6vw, 4rem); display: block; margin-top: 0.15em; color: var(--ink); }
 .hero-sub {
   margin: 34px auto 0; max-width: 640px; color: var(--ink-soft); font-size: 1.08rem; line-height: 1.65;
