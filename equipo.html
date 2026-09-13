@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestión de Equipo | Comunicación UTEC</title>
+<meta name="description" content="Panel interno para el seguimiento del equipo de Comunicación de UTEC: sedes, cargos, tareas en curso, reuniones, ascensos y comentarios.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/equipo.css">
+</head>
+<body>
+
+<header class="equipo-header">
+  <div class="equipo-header-inner">
+    <div>
+      <h1>Gestión de Equipo — Comunicación</h1>
+      <p>Seguimiento centralizado del equipo por sede: tareas en curso, reuniones, ascensos y comentarios. Los cambios se guardan automáticamente en este navegador.</p>
+    </div>
+    <div class="equipo-header-stats">
+      <strong id="totalCount">0</strong>
+      personas en el equipo
+    </div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="toolbar-inner">
+    <input type="text" id="searchInput" placeholder="Buscar por nombre…">
+    <select id="sedeFilter">
+      <option value="todas">Todas las sedes</option>
+      <option value="Montevideo">Montevideo</option>
+      <option value="Rivera">Rivera</option>
+      <option value="Fray Bentos">Fray Bentos</option>
+      <option value="Durazno">Durazno</option>
+    </select>
+    <div class="toolbar-spacer"></div>
+    <span id="saveIndicator">Guardado automáticamente</span>
+    <div class="toolbar-actions">
+      <button class="btn" id="addSedeBtn">+ Nueva sede</button>
+      <button class="btn" id="exportCsvBtn">Exportar CSV</button>
+      <button class="btn" id="exportJsonBtn">Exportar JSON</button>
+      <button class="btn" id="importBtn" onclick="document.getElementById('importInput').click()">Importar JSON</button>
+      <input type="file" id="importInput" accept="application/json" hidden>
+      <button class="btn btn-danger" id="resetBtn">Restaurar original</button>
+    </div>
+  </div>
+</div>
+
+<main class="container">
+  <div id="app"></div>
+</main>
+
+<script src="js/equipo.js"></script>
+</body>
+</html>
