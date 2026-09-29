@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ruedas ITR Este VR</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#06121c; --fg:#eef6fb; --azul:#1a9fdc; }
+  html,body { margin:0; height:100%; background:var(--bg); color:var(--fg); font-family:Poppins,system-ui,sans-serif; overflow:hidden; }
+  canvas { touch-action:none; }
+  #intro { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; padding:16px; z-index:5; background:rgba(6,18,28,.6); }
+  #intro .card { max-width:440px; background:rgba(6,18,28,.94); border:1px solid #1d3a50; border-radius:16px; padding:22px; }
+  #intro img { height:56px; }
+  #intro h1 { margin:12px 0 6px; font-size:23px; }
+  #intro p { font-size:14px; line-height:1.55; color:#b8cfdd; margin:6px 0; }
+  #intro button { margin-top:12px; font:600 15px Poppins,system-ui; padding:11px 18px; border-radius:10px; border:0; background:var(--azul); color:#fff; cursor:pointer; }
+  #xrmsg { font-size:13px; color:#ffcc66; }
+  #hud { position:fixed; top:12px; left:12px; font-weight:600; font-size:15px; text-shadow:0 0 6px #000; z-index:4; }
+</style>
+</head>
+<body>
+<div id="hud"></div>
+<div id="intro"><div class="card">
+  <img src="../../assets/utec-logo-white.png" alt="UTEC 15 años">
+  <h1>Las 15 ruedas del ITR Este</h1>
+  <p>En cada foto del ITR Este – Minas hay una rueda UTEC escondida. Son 15 fotos, 15 ruedas, 15 años.</p>
+  <p>Apuntá con el control y apretá el gatillo para atraparlas. Los círculos azules te llevan a la sala siguiente. Podés caminar para acercarte a las fotos.</p>
+  <p id="xrmsg"></p>
+  <button id="desktopBtn">Jugar sin visor</button>
+</div></div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { VRButton } from 'three/addons/webxr/VRButton.js';
+import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFactory.js';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+import { SALAS } from './salas.js';
+
+const AZUL = 0x1a9fdc;
+const EYE = 1.6;          // altura del centro de las fotos
+const RING_R = 4.2;       // radio de la ronda de fotos
+const FOTO_W = 3.4, FOTO_H = FOTO_W * 9 / 16;
+const RUEDA_SIZE = 0.085; // radio de la rueda sobre la foto (m)
+const HINT_AFTER = 30;    // segundos sin encontrar nada antes de la pista
+
+// ---------- Escena ----------
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.xr.enabled = true;
+renderer.xr.setReferenceSpaceType('local-floor');
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x06121c);
+scene.fog = new THREE.Fog(0x06121c, 7, 16);
+const camera = new THREE.PerspectiveCamera(72, innerWidth / innerHeight, 0.05, 100);
+camera.position.set(0, EYE, 0);
+camera.rotation.order = 'YXZ';
+scene.add(camera);
+scene.add(new THREE.HemisphereLight(0xffffff, 0x223344, 1.3));
+
+const yawDir = (deg, r, y) => {
+  const a = THREE.MathUtils.degToRad(deg);
+  return new THREE.Vector3(Math.sin(a) * r, y, -Math.cos(a) * r);
+};
+
+// ---------- La rueda UTEC en 3D (hexágono + 6 rayos, como el isotipo) ----------
+function ruedaGeometry() {
+  const parts = [], r = 0.075;
+  const v = [...Array(6)].map((_, k) => {
+    const a = THREE.MathUtils.degToRad(90 + 60 * k);
+    return new THREE.Vector2(Math.cos(a), Math.sin(a));
+  });
+  const bar = (a, b, gapA, gapB) => {
+    const u = b.clone().sub(a).normalize();
+    const p0 = a.clone().addScaledVector(u, gapA), p1 = b.clone().addScaledVector(u, -gapB);
+    const g = new THREE.CapsuleGeometry(r, Math.max(p0.distanceTo(p1) - 2 * r, 0.001), 4, 10);
+    g.rotateZ(Math.atan2(u.y, u.x) - Math.PI / 2);
+    const m = p0.clone().add(p1).multiplyScalar(0.5);
+    g.translate(m.x, m.y, 0);
+    return g;
+  };
+  for (let k = 0; k < 6; k++) {
+    parts.push(bar(v[k], v[(k + 1) % 6], 0.16, 0.16));
+    parts.push(bar(new THREE.Vector2(0, 0), v[k], 0.17, 0.22));
+  }
+  return mergeGeometries(parts);
+}
+const RUEDA_GEO = ruedaGeometry();
+const ruedaMat = new THREE.MeshStandardMaterial({ color: AZUL, emissive: AZUL, emissiveIntensity: 0.45, roughness: 0.35 });
+
+function glowTexture() {
+  const c = document.createElement('canvas'); c.width = c.height = 128;
+  const g = c.getContext('2d'), grd = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+  grd.addColorStop(0, 'rgba(120,210,255,0.95)'); grd.addColorStop(1, 'rgba(120,210,255,0)');
+  g.fillStyle = grd; g.fillRect(0, 0, 128, 128);
+  return new THREE.CanvasTexture(c);
+}
+const GLOW_TEX = glowTexture();
+
+function makeRueda() {
+  const g = new THREE.Group();
+  const m = new THREE.Mesh(RUEDA_GEO, ruedaMat);
+  const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: GLOW_TEX, transparent: true, opacity: 0, depthWrite: false }));
+  halo.scale.setScalar(5);
+  const hit = new THREE.Mesh(new THREE.SphereGeometry(1.7, 8, 6), new THREE.MeshBasicMaterial({ visible: false }));
+  g.add(m, halo, hit);
+  g.scale.setScalar(RUEDA_SIZE);
+  g.userData = { kind: 'rueda', mesh: m, halo, hit };
+  hit.userData.owner = g;
+  return g;
+}
+
+// ---------- Ambiente: piso, anillo de luz, rueda gigante en el piso ----------
+function floorTexture() {
+  const c = document.createElement('canvas'); c.width = c.height = 1024;
+  const g = c.getContext('2d');
+  const grd = g.createRadialGradient(512, 512, 0, 512, 512, 512);
+  grd.addColorStop(0, '#12314a'); grd.addColorStop(1, '#06121c');
+  g.fillStyle = grd; g.fillRect(0, 0, 1024, 1024);
+  g.strokeStyle = 'rgba(26,159,220,0.18)'; g.lineWidth = 2;
+  for (let i = 0; i <= 1024; i += 64) { g.beginPath(); g.moveTo(i, 0); g.lineTo(i, 1024); g.stroke(); g.beginPath(); g.moveTo(0, i); g.lineTo(1024, i); g.stroke(); }
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+const floor = new THREE.Mesh(new THREE.CircleGeometry(7, 64), new THREE.MeshBasicMaterial({ map: floorTexture() }));
+floor.rotation.x = -Math.PI / 2;
+scene.add(floor);
+const floorWheel = new THREE.Mesh(RUEDA_GEO, new THREE.MeshBasicMaterial({ color: AZUL, transparent: true, opacity: 0.22 }));
+floorWheel.rotation.x = -Math.PI / 2; floorWheel.position.y = 0.01; floorWheel.scale.setScalar(0.9);
+scene.add(floorWheel);
+const halo = new THREE.Mesh(new THREE.TorusGeometry(RING_R, 0.025, 8, 128), new THREE.MeshBasicMaterial({ color: AZUL }));
+halo.rotation.x = Math.PI / 2; halo.position.y = 3.2;
+scene.add(halo);
+
+// ---------- Paneles de texto ----------
+const FONT = 'Poppins, system-ui, sans-serif';
+function makePanel(w, h, px = 512, depthTest = true) {
+  const c = document.createElement('canvas');
+  c.width = px; c.height = Math.round(px * h / w);
+  const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
+  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthTest }));
+  if (!depthTest) mesh.renderOrder = 10;
+  mesh.userData.draw = (fn) => { const g = c.getContext('2d'); g.clearRect(0, 0, c.width, c.height); fn(g, c.width, c.height); tex.needsUpdate = true; };
+  return mesh;
+}
+function roundRect(g, x, y, w, h, r, fill) { g.beginPath(); g.roundRect(x, y, w, h, r); g.fillStyle = fill; g.fill(); }
+function fitText(g, text, x, y, maxW, size, weight = 500) {
+  do { g.font = `${weight} ${size}px ${FONT}`; size -= 2; } while (g.measureText(text).width > maxW && size > 10);
+  g.fillText(text, x, y);
+}
+const faceCenter = (obj, y) => obj.lookAt(0, y, 0);
+
+// ---------- Fotos ----------
+const texLoader = new THREE.TextureLoader();
+const texCache = {};
+function loadTex(src) {
+  return texCache[src] ||= new Promise(res => texLoader.load(src, t => { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = renderer.capabilities.getMaxAnisotropy(); res(t); }, undefined, () => res(null)));
+}
+const FOTO_YAWS = [0, 72, 144, -144, -72];
+function makeFoto(tex) {
+  const g = new THREE.Group();
+  const frame = new THREE.Mesh(new THREE.PlaneGeometry(FOTO_W + 0.12, FOTO_H + 0.12), new THREE.MeshBasicMaterial({ color: 0x0c2233 }));
+  frame.position.z = -0.01;
+  const bar = new THREE.Mesh(new THREE.PlaneGeometry(FOTO_W + 0.12, 0.04), new THREE.MeshBasicMaterial({ color: AZUL }));
+  bar.position.set(0, -FOTO_H / 2 - 0.08, -0.005);
+  const photo = new THREE.Mesh(new THREE.PlaneGeometry(FOTO_W, FOTO_H), new THREE.MeshBasicMaterial({ map: tex, color: tex ? 0xffffff : 0x334455 }));
+  g.add(frame, bar, photo);
+  return g;
+}
+
+// ---------- Portales ----------
+function makePortal(texto) {
+  const g = new THREE.Group();
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(0.3, 0.035, 12, 48), new THREE.MeshBasicMaterial({ color: 0xffffff }));
+  const disc = new THREE.Mesh(new THREE.CircleGeometry(0.28, 40), new THREE.MeshBasicMaterial({ color: AZUL, transparent: true, opacity: 0.6 }));
+  const label = makePanel(1.2, 0.26);
+  label.position.y = -0.5;
+  label.userData.draw((g2, W, H) => {
+    roundRect(g2, 0, 0, W, H, 36, 'rgba(6,18,28,0.85)');
+    g2.fillStyle = '#fff'; g2.textAlign = 'center'; g2.textBaseline = 'middle';
+    fitText(g2, texto, W / 2, H / 2 + 2, W - 50, H * 0.42, 600);
+  });
+  g.add(ring, disc, label);
+  g.userData = { kind: 'portal', ring };
+  ring.userData.owner = g; disc.userData.owner = g;
+  return g;
+}
+
+// ---------- Estado ----------
+const TOTAL = SALAS.reduce((n, s) => n + s.fotos.length, 0);
+const found = new Set();
+const state = { started: false, done: false, t0: 0, tEnd: 0, sala: 0, lastFind: 0, busy: false };
+let ruedas = [], targets = [];
+let best = null; try { best = +localStorage.getItem('ruedasItrBest') || null; } catch (e) {}
+const content = new THREE.Group(); scene.add(content);
+
+async function goTo(i, first = false) {
+  if (state.busy) return;
+  state.busy = true;
+  if (!first) { await fade(1); beep(440, 0.12, 'triangle'); }
+  const sala = SALAS[i];
+  const texs = await Promise.all(sala.fotos.map(f => loadTex(f.img)));
+  content.clear(); ruedas = [];
+
+  sala.fotos.forEach((f, k) => {
+    const foto = makeFoto(texs[k]);
+    foto.position.copy(yawDir(FOTO_YAWS[k], RING_R, EYE));
+    faceCenter(foto, EYE);
+    content.add(foto);
+    const key = `${sala.id}:${k}`;
+    if (!found.has(key)) {
+      const r = makeRueda();
+      r.position.set((f.rueda.u - 0.5) * FOTO_W, (0.5 - f.rueda.v) * FOTO_H, 0.03);
+      r.userData.key = key; r.userData.spin = 0.5 + Math.random() * 0.5;
+      foto.add(r); ruedas.push(r);
+    }
+  });
+
+  const portals = [];
+  if (i < SALAS.length - 1) portals.push({ yaw: 180, to: i + 1, txt: `${SALAS[i + 1].nombre} →` });
+  if (i > 0) portals.push({ yaw: i < SALAS.length - 1 ? 108 : 180, to: i - 1, txt: `← ${SALAS[i - 1].nombre}` });
+  const portalObjs = portals.map(p => {
+    const o = makePortal(p.txt);
+    o.position.copy(yawDir(p.yaw, RING_R - 0.4, 1.25));
+    faceCenter(o, 1.25);
+    o.userData.to = p.to;
+    content.add(o);
+    return o;
+  });
+
+  // Cartel de la sala, arriba de la primera foto
+  const sign = makePanel(2.6, 0.5, 900);
+  sign.position.copy(yawDir(0, RING_R - 0.05, EYE + FOTO_H / 2 + 0.45));
+  faceCenter(sign, sign.position.y);
+  sign.userData.draw((g, W, H) => {
+    roundRect(g, 0, 0, W, H, 40, 'rgba(6,18,28,0.85)');
+    g.textAlign = 'center'; g.fillStyle = '#1a9fdc';
+    fitText(g, `${sala.nombre} · ITR Este – Minas`, W / 2, H * 0.44, W - 80, H * 0.3, 700);
+    g.fillStyle = '#e6f2f9';
+    fitText(g, sala.texto, W / 2, H * 0.8, W - 80, H * 0.2);
+  });
+  content.add(sign);
+
+  targets = [...ruedas.map(r => r.userData.hit), ...portalObjs.flatMap(p => p.children.slice(0, 2))];
+  state.sala = i; state.lastFind = performance.now() / 1000;
+  drawHud();
+  if (SALAS[i + 1]) SALAS[i + 1].fotos.forEach(f => loadTex(f.img)); // precarga
+  if (!first) await fade(0);
+  state.busy = false;
+}
+
+// ---------- Fundido ----------
+const fadeMesh = new THREE.Mesh(new THREE.SphereGeometry(0.3, 16, 12),
+  new THREE.MeshBasicMaterial({ color: 0x000000, side: THREE.BackSide, transparent: true, opacity: 0, depthTest: false }));
+fadeMesh.renderOrder = 100;
+camera.add(fadeMesh);
+function fade(to, ms = 350) {
+  return new Promise(res => {
+    const from = fadeMesh.material.opacity, t0 = performance.now();
+    const step = () => {
+      const k = Math.min((performance.now() - t0) / ms, 1);
+      fadeMesh.material.opacity = from + (to - from) * k;
+      k < 1 ? requestAnimationFrame(step) : res();
+    };
+    step();
+  });
+}
+
+// ---------- HUD ----------
+const hud = makePanel(0.5, 0.1, 512, false);
+hud.position.set(0, -0.32, -1.1); hud.rotation.x = -0.25;
+camera.add(hud);
+const fmt = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+const elapsed = () => state.done ? state.tEnd - state.t0 : (state.started ? performance.now() / 1000 - state.t0 : 0);
+let lastHudSec = -1;
+function drawHud() {
+  hud.visible = state.started && !state.done;
+  hud.userData.draw((g, W, H) => {
+    roundRect(g, 0, 0, W, H, H / 2, 'rgba(6,18,28,0.75)');
+    g.fillStyle = '#fff'; g.font = `600 ${H * 0.5}px ${FONT}`; g.textBaseline = 'middle';
+    g.textAlign = 'left'; g.fillText(`⬡ ${found.size} / ${TOTAL}`, H * 0.5, H / 2 + 2);
+    g.textAlign = 'right'; g.fillText(fmt(elapsed()), W - H * 0.5, H / 2 + 2);
+  });
+  document.getElementById('hud').textContent = state.started
+    ? `Ruedas ${found.size}/${TOTAL} · ${fmt(elapsed())}${state.done ? ' · ¡Completado!' : ''}` : '';
+}
+
+// ---------- Pantalla de bienvenida / final (con el video del edificio) ----------
+const video = document.createElement('video');
+video.src = 'intro.mp4'; video.loop = true; video.muted = true; video.playsInline = true; video.crossOrigin = 'anonymous';
+const vtex = new THREE.VideoTexture(video); vtex.colorSpace = THREE.SRGBColorSpace;
+const lobby = new THREE.Group(); scene.add(lobby);
+const screen = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 2.4 * 480 / 854), new THREE.MeshBasicMaterial({ map: vtex, depthTest: false }));
+screen.renderOrder = 11; screen.position.y = 0.95;
+screen.visible = false; // se muestra recién cuando el video arranca
+video.addEventListener('playing', () => { screen.visible = true; });
+const big = makePanel(2.4, 1.0, 1024, false);
+big.position.y = -0.35;
+lobby.add(screen, big);
+lobby.visible = false;
+
+function showLobby(kind) {
+  const fwd = new THREE.Vector3(); camera.getWorldDirection(fwd); fwd.y = 0; fwd.normalize();
+  const head = new THREE.Vector3(); camera.getWorldPosition(head);
+  if (!renderer.xr.isPresenting) { camera.rotation.x = 0; }
+  lobby.position.copy(head).addScaledVector(fwd, 2.6); lobby.position.y = head.y - 0.35;
+  lobby.lookAt(head.x, lobby.position.y, head.z);
+  lobby.visible = true;
+  video.play().catch(() => {});
+  big.userData.draw((g, W, H) => {
+    roundRect(g, 0, 0, W, H, 40, 'rgba(6,18,28,0.95)');
+    g.textAlign = 'center'; g.fillStyle = '#fff';
+    if (kind === 'inicio') {
+      fitText(g, 'Las 15 ruedas del ITR Este', W / 2, H * 0.3, W - 80, H * 0.2, 700);
+      g.fillStyle = '#b8cfdd';
+      fitText(g, 'Una rueda escondida en cada foto. Apuntá y apretá el gatillo.', W / 2, H * 0.55, W - 80, H * 0.12);
+      g.fillStyle = '#1a9fdc';
+      fitText(g, 'Gatillo para empezar', W / 2, H * 0.83, W - 80, H * 0.15, 700);
+    } else {
+      fitText(g, `¡Encontraste las ${TOTAL}!  ${fmt(state.tEnd - state.t0)}`, W / 2, H * 0.27, W - 80, H * 0.2, 700);
+      g.fillStyle = '#1a9fdc';
+      fitText(g, best ? `Récord en este visor: ${fmt(best)}` : '', W / 2, H * 0.47, W - 80, H * 0.12, 600);
+      g.fillStyle = '#fff';
+      fitText(g, 'UTEC 15 años · Recién empezamos.', W / 2, H * 0.68, W - 80, H * 0.14, 700);
+      g.fillStyle = '#b8cfdd';
+      fitText(g, 'Gatillo para jugar de nuevo', W / 2, H * 0.88, W - 80, H * 0.1);
+    }
+  });
+}
+function hideLobby() { lobby.visible = false; video.pause(); }
+
+function start() {
+  found.clear();
+  Object.assign(state, { started: true, done: false, t0: performance.now() / 1000 });
+  hideLobby();
+  document.getElementById('intro').style.display = 'none';
+  state.busy = false;
+  goTo(0, true);
+  beep(660, 0.15, 'triangle');
+}
+function finish() {
+  state.done = true; state.tEnd = performance.now() / 1000;
+  const t = state.tEnd - state.t0;
+  if (!best || t < best) { best = t; try { localStorage.setItem('ruedasItrBest', t); } catch (e) {} }
+  [523, 659, 784, 1047].forEach((f, i) => setTimeout(() => beep(f, 0.18, 'triangle', 0.15), i * 130));
+  showLobby('final');
+  drawHud();
+}
+
+// ---------- Interacción ----------
+const flying = [];
+function select(obj, hand) {
+  if (state.busy) return;
+  if (!state.started || state.done) { start(); return; }
+  const o = obj && obj.userData.owner;
+  if (!o) return;
+  if (o.userData.kind === 'rueda') {
+    found.add(o.userData.key);
+    ruedas.splice(ruedas.indexOf(o), 1);
+    targets = targets.filter(t => t !== o.userData.hit);
+    o.userData.halo.material.opacity = 0;
+    flying.push({ o, t: 0 });
+    state.lastFind = performance.now() / 1000;
+    beep(880, 0.08, 'square', 0.08); setTimeout(() => beep(1320, 0.12, 'square', 0.08), 70);
+    if (hand) pulse(hand, 0.7, 60);
+    drawHud();
+    if (found.size === TOTAL) setTimeout(finish, 700);
+  } else if (o.userData.kind === 'portal') {
+    if (hand) pulse(hand, 0.4, 40);
+    goTo(o.userData.to);
+  }
+}
+
+const raycaster = new THREE.Raycaster();
+const tmpM = new THREE.Matrix4();
+function rayFromController(ctrl) {
+  tmpM.identity().extractRotation(ctrl.matrixWorld);
+  raycaster.ray.origin.setFromMatrixPosition(ctrl.matrixWorld);
+  raycaster.ray.direction.set(0, 0, -1).applyMatrix4(tmpM);
+}
+
+const factory = new XRControllerModelFactory();
+const hands = [];
+const laserGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, -1)]);
+for (let i = 0; i < 2; i++) {
+  const ctrl = renderer.xr.getController(i);
+  const grip = renderer.xr.getControllerGrip(i);
+  grip.add(factory.createControllerModel(grip));
+  const laser = new THREE.Line(laserGeo, new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.6 }));
+  laser.scale.z = 6;
+  const dot = new THREE.Mesh(new THREE.SphereGeometry(0.025, 8, 6), new THREE.MeshBasicMaterial({ color: AZUL }));
+  dot.visible = false;
+  ctrl.add(laser);
+  scene.add(ctrl, grip, dot);
+  const h = { ctrl, laser, dot, gamepad: null, hover: null };
+  ctrl.addEventListener('connected', e => { h.gamepad = e.data.gamepad; laser.visible = e.data.targetRayMode !== 'gaze'; });
+  ctrl.addEventListener('disconnected', () => { h.gamepad = null; });
+  ctrl.addEventListener('selectstart', () => select(h.hover, h));
+  hands.push(h);
+}
+function pulse(h, s, ms) {
+  const a = h.gamepad && h.gamepad.hapticActuators && h.gamepad.hapticActuators[0];
+  if (a && a.pulse) a.pulse(s, ms);
+}
+
+// Escritorio / celular: arrastrar para mirar, tocar para elegir
+let desktop = false, drag = null;
+document.getElementById('desktopBtn').onclick = () => { desktop = true; start(); };
+const cvs = renderer.domElement;
+cvs.addEventListener('pointerdown', e => { drag = { x: e.clientX, y: e.clientY, moved: 0 }; cvs.setPointerCapture(e.pointerId); });
+cvs.addEventListener('pointermove', e => {
+  if (!drag || renderer.xr.isPresenting) return;
+  const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+  drag.moved += Math.abs(dx) + Math.abs(dy); drag.x = e.clientX; drag.y = e.clientY;
+  camera.rotation.y += dx * 0.004;
+  camera.rotation.x = THREE.MathUtils.clamp(camera.rotation.x + dy * 0.004, -1.2, 1.2);
+});
+cvs.addEventListener('pointerup', e => {
+  if (!drag || renderer.xr.isPresenting) { drag = null; return; }
+  const click = drag.moved < 8; drag = null;
+  if (!click || !desktop) return;
+  raycaster.setFromCamera(new THREE.Vector2((e.clientX / innerWidth) * 2 - 1, -(e.clientY / innerHeight) * 2 + 1), camera);
+  const hit = raycaster.intersectObjects(targets, false)[0];
+  select(hit ? hit.object : null, null);
+});
+// Zoom con la rueda del mouse (en escritorio no se puede caminar hacia la foto)
+cvs.addEventListener('wheel', e => {
+  camera.fov = THREE.MathUtils.clamp(camera.fov + e.deltaY * 0.03, 30, 80); camera.updateProjectionMatrix();
+}, { passive: true });
+
+renderer.xr.addEventListener('sessionstart', () => {
+  document.getElementById('intro').style.display = 'none';
+  if (!state.started) setTimeout(() => showLobby('inicio'), 400);
+});
+
+// ---------- Audio ----------
+let actx;
+function beep(freq, dur = 0.08, type = 'sine', vol = 0.12) {
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    const o = actx.createOscillator(), g = actx.createGain();
+    o.type = type; o.frequency.value = freq;
+    g.gain.setValueAtTime(vol, actx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + dur);
+    o.connect(g).connect(actx.destination); o.start(); o.stop(actx.currentTime + dur);
+  } catch (e) {}
+}
+
+// ---------- Loop ----------
+const clock = new THREE.Clock();
+const fwd = new THREE.Vector3(), camPos = new THREE.Vector3(), rp = new THREE.Vector3();
+renderer.setAnimationLoop(() => {
+  const dt = Math.min(clock.getDelta(), 0.05), now = performance.now() / 1000;
+
+  floorWheel.rotation.z += dt * 0.05;
+  ruedas.forEach(r => { r.userData.mesh.rotation.z += r.userData.spin * dt; });
+  content.children.forEach(c => { if (c.userData.kind === 'portal') c.userData.ring.scale.setScalar(1 + Math.sin(now * 3) * 0.06); });
+
+  // Pista: la rueda más cercana a la mirada brilla si pasa mucho tiempo sin encontrar
+  const hinting = state.started && !state.done && ruedas.length && now - state.lastFind > HINT_AFTER;
+  let hintR = null;
+  if (hinting) {
+    camera.getWorldDirection(fwd); camera.getWorldPosition(camPos);
+    let bestD = -2;
+    ruedas.forEach(r => { r.getWorldPosition(rp); const d = rp.sub(camPos).normalize().dot(fwd); if (d > bestD) { bestD = d; hintR = r; } });
+  }
+  ruedas.forEach(r => r.userData.halo.material.opacity = r === hintR ? 0.55 + Math.sin(now * 5) * 0.4 : 0);
+
+  // Ruedas atrapadas: crecen, giran y se desvanecen
+  for (let i = flying.length - 1; i >= 0; i--) {
+    const f = flying[i]; f.t += dt / 0.6;
+    const k = Math.min(f.t, 1);
+    f.o.scale.setScalar(RUEDA_SIZE * (1 + k * 3) * (1 - k) + 0.0001);
+    f.o.position.z = 0.03 + k * 0.6;
+    f.o.userData.mesh.rotation.z += 14 * dt;
+    if (f.t >= 1) { f.o.removeFromParent(); flying.splice(i, 1); }
+  }
+
+  if (renderer.xr.isPresenting) {
+    const all = lobby.visible ? [] : targets;
+    hands.forEach(h => {
+      if (!h.gamepad) { h.dot.visible = false; h.hover = null; return; }
+      rayFromController(h.ctrl);
+      const hit = all.length ? raycaster.intersectObjects(all, false)[0] : null;
+      h.hover = hit ? hit.object : null;
+      h.laser.material.color.set(hit ? AZUL : 0xffffff);
+      h.laser.scale.z = hit ? hit.distance : 6;
+      h.dot.visible = !!hit; if (hit) h.dot.position.copy(hit.point);
+    });
+  }
+
+  const sec = Math.floor(elapsed());
+  if (sec !== lastHudSec) { lastHudSec = sec; drawHud(); }
+  renderer.render(scene, camera);
+});
+
+addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+
+// ---------- Botón VR ----------
+const xrmsg = document.getElementById('xrmsg');
+if (navigator.xr) {
+  navigator.xr.isSessionSupported('immersive-vr').then(ok => {
+    if (ok) document.body.appendChild(VRButton.createButton(renderer));
+    else xrmsg.textContent = 'No se detecta un visor. Abrí esta página desde el navegador del visor (ej. Meta Quest Browser).';
+  });
+} else {
+  xrmsg.textContent = 'Este navegador no soporta VR. Podés jugar igual sin visor.';
+}
+Promise.all(['500 20px Poppins', '600 20px Poppins', '700 20px Poppins'].map(f => document.fonts.load(f)))
+  .catch(() => {}).then(() => goTo(0, true));
+if (location.search.includes('debug')) window.__dbg = { camera, state, found, get ruedas() { return ruedas; }, get portales() { return content.children.filter(c => c.userData.kind === 'portal'); } };
+</script>
+</body>
+</html>
