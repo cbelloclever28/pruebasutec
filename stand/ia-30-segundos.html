@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>IA en 30 segundos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+/* Kiosco horizontal: escenario de cámara a la izquierda, panel de pasos a la derecha. Look único (no cambia con el tema). */
+:root {
+  --bg: #2a1442;
+  --panel: #3e1d5b;
+  --panel-2: #4d2a6e;
+  --ink: #ffffff;
+  --muted: #c9b8dc;
+  --blue: #0fa8de;
+  --orange: #f2661c;
+  --white-cls: #f4f8fb;
+  --line: rgba(255,255,255,.14);
+  --font: "Poppins", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font);
+  overflow: hidden; user-select: none; -webkit-user-select: none; touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+button { font-family: inherit; color: inherit; cursor: pointer; }
+button:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+.app { height: 100%; display: flex; flex-direction: column; padding: 16px clamp(16px, 3vw, 40px); gap: 16px; }
+.topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: .85rem; color: var(--muted); }
+.brand { font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); }
+.brand b { color: var(--orange); }
+.pill { border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; background: transparent; font-size: .8rem; color: var(--muted); }
+.pill.warn { color: #ffd2b8; border-color: rgba(242,102,28,.6); }
+.screen { flex: 1; min-height: 0; display: flex; }
+.screen[hidden] { display: none !important; }
+
+/* Atracción */
+#s-attract { flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 28px; }
+.attract-q { font-size: clamp(2.2rem, 6vw, 5rem); font-weight: 800; line-height: 1.02; max-width: 16ch; text-wrap: balance; margin: 0; }
+.attract-q em { font-style: normal; color: var(--orange); }
+.attract-sub { color: var(--muted); font-size: clamp(1rem, 1.8vw, 1.35rem); max-width: 40ch; margin: 0; }
+.gestures { display: flex; gap: 18px; font-size: clamp(2.5rem, 6vw, 4.5rem); }
+.gestures span { animation: bob 2.4s ease-in-out infinite; display: inline-block; }
+.gestures span:nth-child(2) { animation-delay: .4s; } .gestures span:nth-child(3) { animation-delay: .8s; }
+@keyframes bob { 50% { transform: translateY(-14px) rotate(-6deg); } }
+.big-btn {
+  font-size: clamp(1.2rem, 2.4vw, 1.8rem); font-weight: 800; border: 0; border-radius: 999px;
+  padding: 20px 48px; background: var(--orange); color: #fff; box-shadow: 0 10px 0 #a63f0b; transition: transform .08s, box-shadow .08s;
+}
+.big-btn:active { transform: translateY(6px); box-shadow: 0 4px 0 #a63f0b; }
+.big-btn.blue { background: var(--blue); box-shadow: 0 10px 0 var(--blue-shadow, #075e82); }
+.big-btn.ghost { background: transparent; box-shadow: none; border: 2px solid var(--line); font-size: 1rem; padding: 14px 28px; }
+.pulse { animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse { 50% { transform: scale(1.05); } }
+
+/* Entrenamiento / prueba: dos columnas */
+.split { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: clamp(16px, 2.5vw, 32px); align-items: stretch; }
+@media (max-width: 760px), (orientation: portrait) { .split { grid-template-columns: 1fr; grid-template-rows: auto 1fr; } }
+.stage-wrap { position: relative; min-height: 0; display: flex; align-items: center; justify-content: center; }
+#stage { width: 100%; max-height: 100%; aspect-ratio: 4 / 3; max-width: 100%; border-radius: 24px; background: var(--panel); object-fit: contain; display: block; }
+.side { min-width: 0; display: flex; flex-direction: column; gap: 18px; justify-content: center; }
+.steps { display: flex; gap: 8px; }
+.steps i { flex: 1; height: 6px; border-radius: 3px; background: var(--line); }
+.steps i.done { background: var(--blue); } .steps i.now { background: var(--orange); }
+.eyebrow { font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin: 0; }
+.prompt { font-size: clamp(1.6rem, 3.4vw, 2.8rem); font-weight: 800; line-height: 1.08; margin: 0; text-wrap: balance; }
+.prompt .emo { font-size: 1.2em; }
+.hint { color: var(--muted); margin: 0; font-size: 1rem; max-width: 42ch; }
+.hold {
+  position: relative; overflow: hidden; border: 0; border-radius: 22px; padding: 26px 20px;
+  font-size: clamp(1.1rem, 2.2vw, 1.5rem); font-weight: 800; background: var(--panel-2); color: #fff;
+  touch-action: none;
+}
+.hold .fill { position: absolute; inset: 0; transform-origin: left; transform: scaleX(0); background: var(--cls, var(--orange)); opacity: .9; transition: transform .1s linear; }
+.hold span { position: relative; }
+.hold.active { outline: 4px solid var(--cls, var(--orange)); }
+.count { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--muted); }
+.thumbs { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; min-height: 40px; }
+.thumbs canvas { width: 100%; aspect-ratio: 1; border-radius: 6px; background: var(--panel); display: block; }
+
+/* Prueba */
+.bars { display: grid; gap: 12px; }
+.bar { display: grid; grid-template-columns: 3.2rem 1fr 3.5rem; align-items: center; gap: 12px; font-weight: 600; }
+.bar .emo { font-size: 2rem; text-align: center; }
+.bar .track { height: 22px; border-radius: 11px; background: var(--panel); overflow: hidden; }
+.bar .track div { height: 100%; width: 0; background: var(--c); border-radius: 11px; transition: width .12s; }
+.bar .pct { font-variant-numeric: tabular-nums; text-align: right; color: var(--muted); }
+.verdict { font-size: clamp(1.4rem, 2.6vw, 2rem); font-weight: 800; margin: 0; min-height: 1.3em; }
+.row { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+
+/* Juego */
+#s-game { position: relative; }
+#game { width: 100%; height: 100%; border-radius: 24px; background: var(--panel); display: block; }
+.hud { position: absolute; top: 14px; left: 18px; right: 18px; display: flex; justify-content: space-between; align-items: flex-start; pointer-events: none; gap: 12px; }
+.hud .stat { background: rgba(42,20,66,.75); border-radius: 16px; padding: 8px 16px; font-weight: 800; font-size: clamp(1rem, 2vw, 1.6rem); font-variant-numeric: tabular-nums; }
+.hud .stat small { display: block; font-size: .7rem; font-weight: 600; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; }
+.pip { position: absolute; right: 18px; bottom: 18px; width: clamp(140px, 22vw, 260px); border-radius: 16px; overflow: hidden; border: 3px solid var(--line); }
+.pip canvas { width: 100%; display: block; aspect-ratio: 4/3; }
+.pip .now { position: absolute; left: 0; right: 0; bottom: 0; text-align: center; font-weight: 800; background: rgba(42,20,66,.8); padding: 4px; font-size: .9rem; }
+.countdown { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: clamp(5rem, 16vw, 12rem); font-weight: 800; pointer-events: none; text-shadow: 0 8px 0 rgba(0,0,0,.25); }
+
+/* Simulación */
+.simpad { display: flex; gap: 10px; flex-wrap: wrap; }
+.simpad button { flex: 1; min-width: 90px; border: 2px solid var(--line); background: var(--panel); border-radius: 16px; padding: 12px; font-size: 1.6rem; touch-action: none; }
+.simpad button.on { border-color: var(--c); background: var(--panel-2); }
+.simpad small { display: block; font-size: .7rem; color: var(--muted); font-weight: 600; }
+#game-sim { position: absolute; left: 18px; bottom: 18px; width: min(360px, 50%); }
+
+/* Resultado */
+#s-result { flex-direction: column; justify-content: center; gap: 24px; max-width: 1100px; margin: 0 auto; width: 100%; }
+.score-line { display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap; }
+.score-big { font-size: clamp(4rem, 11vw, 8rem); font-weight: 800; line-height: .9; color: var(--orange); font-variant-numeric: tabular-nums; }
+.score-line p { margin: 0; font-size: clamp(1.2rem, 2.4vw, 1.8rem); font-weight: 600; }
+.learned { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 760px) { .learned { grid-template-columns: 1fr; } }
+.learned div { background: var(--panel); border-radius: 20px; padding: 18px 20px; min-width: 0; }
+.learned b { display: block; font-size: 1.1rem; margin-bottom: 4px; }
+.learned b span { color: var(--blue); margin-right: 6px; }
+.learned p { margin: 0; color: var(--muted); font-size: .95rem; }
+.learned strong { color: var(--ink); }
+.careers { color: var(--muted); margin: 0; }
+.careers strong { color: var(--ink); }
+.reset-note { color: var(--muted); font-size: .85rem; font-variant-numeric: tabular-nums; }
+@media (prefers-reduced-motion: reduce) { .gestures span, .pulse { animation: none; } }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="topbar">
+    <span class="brand">UTEC <b>·</b> Laboratorio de IA</span>
+    <div class="row">
+      <span class="pill warn" id="simBadge" hidden>Sin cámara · modo simulación</span>
+      <span class="pill">Las imágenes no se guardan: todo ocurre en esta tablet</span>
+      <button class="pill" id="fsBtn" type="button">Pantalla completa</button>
+    </div>
+  </div>
+
+  <!-- 0. Atracción -->
+  <section class="screen" id="s-attract">
+    <div class="gestures" aria-hidden="true"><span>✋</span><span>✊</span><span>🤖</span></div>
+    <h1 class="attract-q">¿Podés entrenar una <em>IA</em> en 30 segundos?</h1>
+    <p class="attract-sub">Le enseñás dos gestos con tu mano y después la usás para manejar un dron.</p>
+    <button class="big-btn pulse" id="startBtn" type="button">Tocá para empezar</button>
+  </section>
+
+  <!-- 1. Entrenamiento (3 pasos) -->
+  <section class="screen" id="s-train" hidden>
+    <div class="split">
+      <div class="stage-wrap" id="stageHome"><canvas id="stage" width="640" height="480"></canvas></div>
+      <div class="side">
+        <div class="steps" id="steps"><i></i><i></i><i></i></div>
+        <p class="eyebrow" id="trainEyebrow">Paso 1 de 3 · Juntá datos</p>
+        <h2 class="prompt" id="trainPrompt"></h2>
+        <p class="hint" id="trainHint"></p>
+        <div class="simpad" id="trainSim" hidden></div>
+        <button class="hold" id="holdBtn" type="button"><div class="fill" id="holdFill"></div><span id="holdLabel">Mantené apretado para enseñarle</span></button>
+        <div class="count" id="holdCount">0 de 40 imágenes</div>
+        <div class="thumbs" id="thumbs"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Prueba -->
+  <section class="screen" id="s-test" hidden>
+    <div class="split">
+      <div class="stage-wrap" id="stageHome2"></div>
+      <div class="side">
+        <div class="steps"><i class="done"></i><i class="done"></i><i class="done"></i></div>
+        <p class="eyebrow">Tu IA ya aprendió · Probala</p>
+        <h2 class="prompt">Mové la mano y mirá qué cree que ves</h2>
+        <div class="simpad" id="testSim" hidden></div>
+        <div class="bars" id="bars"></div>
+        <p class="verdict" id="verdict"></p>
+        <div class="row">
+          <button class="big-btn blue" id="playBtn" type="button">¡A jugar!</button>
+          <button class="big-btn ghost" id="retrainBtn" type="button">Volver a entrenar</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Juego -->
+  <section class="screen" id="s-game" hidden>
+    <canvas id="game"></canvas>
+    <div class="hud">
+      <div class="stat"><small>Baterías</small><span id="hudScore">0</span></div>
+      <div class="stat"><small>Tiempo</small><span id="hudTime">30</span></div>
+    </div>
+    <div class="pip" id="pip"><div class="now" id="pipNow"></div></div>
+    <div class="simpad" id="game-sim" hidden></div>
+    <div class="countdown" id="countdown"></div>
+  </section>
+
+  <!-- 4. Resultado -->
+  <section class="screen" id="s-result" hidden>
+    <div class="score-line">
+      <span class="score-big" id="resScore">0</span>
+      <p>baterías cargadas con una IA que entrenaste vos</p>
+    </div>
+    <div class="learned">
+      <div><b><span>1</span>Datos</b><p>Le mostraste <strong id="resSamples">120</strong> imágenes de tu mano, separadas en 3 categorías.</p></div>
+      <div><b><span>2</span>Entrenamiento</b><p>La IA comparó esas imágenes y aprendió qué diferencia un <strong>✋</strong> de un <strong>✊</strong>.</p></div>
+      <div><b><span>3</span>Predicción</b><p>Durante el juego decidió <strong id="resRate">15</strong> veces por segundo qué gesto estabas haciendo.</p></div>
+    </div>
+    <p class="careers">Así funciona el <strong>machine learning</strong>. Es parte de lo que se estudia en UTEC en carreras como <strong>Tecnologías de la Información</strong> y <strong>Mecatrónica</strong>.</p>
+    <div class="row">
+      <button class="big-btn" id="againBtn" type="button">Jugar otra vez</button>
+      <span class="reset-note" id="resetNote"></span>
+    </div>
+  </section>
+</div>
+
+<script>
+(() => {
+  const CLASSES = [
+    { id: 'open', emoji: '✋', name: 'Mano abierta', action: 'sube',   color: '#f2661c',
+      hint: 'Poné la mano abierta dentro del recuadro. Movela un poco mientras apretás: así aprende mejor.' },
+    { id: 'fist', emoji: '✊', name: 'Puño',          action: 'baja',   color: '#0fa8de',
+      hint: 'Ahora cerrá el puño dentro del recuadro. Movelo un poco, acercalo y alejalo.' },
+    { id: 'none', emoji: '🚫', name: 'Sin mano',      action: 'quieto', color: '#f4f8fb',
+      hint: 'Sacá la mano del recuadro. La IA también tiene que aprender cómo se ve "nada".' },
+  ];
+  const SAMPLES_PER_CLASS = 40, FEAT = 32, K = 5, GAME_SECONDS = 30, IDLE_MS = 45000, RESULT_RESET_S = 25;
+
+  const $ = id => document.getElementById(id);
+  const screens = ['s-attract', 's-train', 's-test', 's-game', 's-result'];
+  let current = 's-attract';
+  function show(id) { screens.forEach(s => $(s).hidden = s !== id); current = id; }
+
+  // ---------- Cámara / escenario ----------
+  const stage = $('stage'), sctx = stage.getContext('2d');
+  const video = document.createElement('video');
+  video.muted = true; video.playsInline = true; video.setAttribute('playsinline', '');
+  let camOk = false, simMode = false, simPressed = 'none';
+  const ROI = { s: 300 }; ROI.x = (640 - ROI.s) / 2; ROI.y = (480 - ROI.s) / 2;
+
+  async function startCamera() {
+    if (camOk || simMode) return;
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } }, audio: false });
+      video.srcObject = stream; await video.play(); camOk = true;
+    } catch (e) {
+      simMode = true; $('simBadge').hidden = false; buildSimPads();
+    }
+  }
+
+  function drawStage() {
+    sctx.save();
+    if (camOk && video.videoWidth) {
+      const vw = video.videoWidth, vh = video.videoHeight, r = Math.max(640 / vw, 480 / vh);
+      const dw = vw * r, dh = vh * r;
+      sctx.translate(640, 0); sctx.scale(-1, 1); // espejo
+      sctx.drawImage(video, (640 - dw) / 2, (480 - dh) / 2, dw, dh);
+    } else {
+      sctx.fillStyle = '#3e1d5b'; sctx.fillRect(0, 0, 640, 480);
+      sctx.fillStyle = '#c9b8dc'; sctx.font = '600 20px Poppins, sans-serif'; sctx.textAlign = 'center';
+      sctx.fillText(simMode ? 'Simulación: usá los botones' : 'Activando cámara…', 320, 60);
+      if (simMode) {
+        const c = CLASSES.find(c => c.id === simPressed);
+        if (c.id !== 'none') { sctx.font = '160px serif'; sctx.textBaseline = 'middle'; sctx.fillText(c.emoji, 320, 250); }
+      }
+    }
+    sctx.restore();
+    // recuadro de interés
+    sctx.fillStyle = 'rgba(42,20,66,.45)';
+    sctx.fillRect(0, 0, 640, ROI.y); sctx.fillRect(0, ROI.y + ROI.s, 640, 480 - ROI.y - ROI.s);
+    sctx.fillRect(0, ROI.y, ROI.x, ROI.s); sctx.fillRect(ROI.x + ROI.s, ROI.y, 640 - ROI.x - ROI.s, ROI.s);
+    sctx.strokeStyle = '#ffffff'; sctx.lineWidth = 4; sctx.setLineDash([18, 12]);
+    sctx.strokeRect(ROI.x, ROI.y, ROI.s, ROI.s); sctx.setLineDash([]);
+  }
+
+  // ---------- Features + KNN (sin librerías, 100% offline) ----------
+  const fcan = document.createElement('canvas'); fcan.width = fcan.height = FEAT;
+  const fctx = fcan.getContext('2d', { willReadFrequently: true });
+  const simBase = {};
+  CLASSES.forEach((c, i) => { let s = 1234 + i * 777; simBase[c.id] = Float32Array.from({ length: FEAT * FEAT }, () => { s = (s * 16807) % 2147483647; return s / 2147483647 - .5; }); });
+
+  function normalize(v) {
+    let m = 0; for (const x of v) m += x; m /= v.length;
+    let sd = 0; for (let i = 0; i < v.length; i++) { v[i] -= m; sd += v[i] * v[i]; }
+    sd = Math.sqrt(sd / v.length) || 1; for (let i = 0; i < v.length; i++) v[i] /= sd;
+    return v;
+  }
+  function features() {
+    if (simMode) {
+      const b = simBase[simPressed], v = new Float32Array(b.length);
+      for (let i = 0; i < b.length; i++) v[i] = b[i] + (Math.random() - .5) * .9;
+      return normalize(v);
+    }
+    fctx.drawImage(stage, ROI.x, ROI.y, ROI.s, ROI.s, 0, 0, FEAT, FEAT);
+    const d = fctx.getImageData(0, 0, FEAT, FEAT).data, v = new Float32Array(FEAT * FEAT);
+    for (let i = 0; i < v.length; i++) v[i] = .299 * d[i * 4] + .587 * d[i * 4 + 1] + .114 * d[i * 4 + 2];
+    return normalize(v);
+  }
+  let dataset = [];
+  function predict(v) {
+    const dists = dataset.map(s => { let d = 0; for (let i = 0; i < v.length; i++) { const t = v[i] - s.v[i]; d += t * t; } return { d, c: s.c }; });
+    dists.sort((a, b) => a.d - b.d);
+    const score = { open: 0, fist: 0, none: 0 }; let tot = 0;
+    dists.slice(0, K).forEach(n => { const w = 1 / (n.d + 1e-3); score[n.c] += w; tot += w; });
+    for (const k in score) score[k] /= tot || 1;
+    return score;
+  }
+
+  // ---------- Simulación (cuando no hay cámara) ----------
+  function buildSimPads() {
+    ['trainSim', 'testSim', 'game-sim'].forEach(id => {
+      const pad = $(id); pad.hidden = false; pad.innerHTML = '';
+      CLASSES.forEach(c => {
+        const b = document.createElement('button'); b.type = 'button'; b.style.setProperty('--c', c.color);
+        b.innerHTML = `${c.emoji}<small>${c.name}</small>`; b.dataset.cls = c.id;
+        const on = e => { e.preventDefault(); simPressed = c.id; syncSim(); };
+        b.addEventListener('pointerdown', on);
+        pad.appendChild(b);
+      });
+    });
+    syncSim();
+  }
+  function syncSim() { document.querySelectorAll('.simpad button').forEach(b => b.classList.toggle('on', b.dataset.cls === simPressed)); }
+  addEventListener('keydown', e => { const c = CLASSES[+e.key - 1]; if (c && simMode) { simPressed = c.id; syncSim(); } });
+
+  // ---------- Entrenamiento ----------
+  let step = 0, holding = false, lastSample = 0;
+  const holdBtn = $('holdBtn');
+  function setStep(i) {
+    step = i; const c = CLASSES[i];
+    [...$('steps').children].forEach((el, j) => el.className = j < i ? 'done' : j === i ? 'now' : '');
+    $('trainEyebrow').textContent = `Paso ${i + 1} de 3 · Juntá datos`;
+    $('trainPrompt').innerHTML = `<span class="emo">${c.emoji}</span> ${c.name}${c.id !== 'none' ? ` = el dron <u>${c.action}</u>` : ''}`;
+    $('trainHint').textContent = simMode ? `${c.hint} (Simulación: elegí ${c.emoji} arriba y después mantené apretado.)` : c.hint;
+    holdBtn.style.setProperty('--cls', c.color);
+    $('thumbs').innerHTML = '';
+    if (simMode) { simPressed = c.id; syncSim(); }
+    updateHold();
+  }
+  function countOf(id) { return dataset.filter(s => s.c === id).length; }
+  function updateHold() {
+    const n = countOf(CLASSES[step].id);
+    $('holdFill').style.transform = `scaleX(${n / SAMPLES_PER_CLASS})`;
+    $('holdCount').textContent = `${n} de ${SAMPLES_PER_CLASS} imágenes`;
+  }
+  function addThumb() {
+    const t = document.createElement('canvas'); t.width = t.height = 48;
+    t.getContext('2d').drawImage(stage, ROI.x, ROI.y, ROI.s, ROI.s, 0, 0, 48, 48);
+    const th = $('thumbs'); th.prepend(t); while (th.children.length > 10) th.lastChild.remove();
+  }
+  const startHold = e => { e.preventDefault(); holding = true; holdBtn.classList.add('active'); try { holdBtn.setPointerCapture(e.pointerId); } catch (_) {} };
+  const endHold = () => { holding = false; holdBtn.classList.remove('active'); };
+  holdBtn.addEventListener('pointerdown', startHold);
+  ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(ev => holdBtn.addEventListener(ev, endHold));
+  holdBtn.addEventListener('contextmenu', e => e.preventDefault());
+
+  function trainTick(t) {
+    if (!holding || t - lastSample < 70) return;
+    lastSample = t;
+    const c = CLASSES[step];
+    if (countOf(c.id) >= SAMPLES_PER_CLASS) return;
+    dataset.push({ v: features(), c: c.id }); addThumb(); updateHold();
+    if (countOf(c.id) >= SAMPLES_PER_CLASS) {
+      endHold();
+      setTimeout(() => { if (step < 2) setStep(step + 1); else goTest(); }, 450);
+    }
+  }
+
+  // ---------- Prueba ----------
+  let probs = { open: 0, fist: 0, none: 1 }, inferCount = 0, inferStart = 0, lastInfer = 0;
+  $('bars').innerHTML = CLASSES.map(c => `<div class="bar" style="--c:${c.color}"><span class="emo">${c.emoji}</span><div class="track"><div id="bar-${c.id}"></div></div><span class="pct" id="pct-${c.id}">0%</span></div>`).join('');
+  function inferTick(t) {
+    if (t - lastInfer < 66) return; lastInfer = t;
+    const p = predict(features()); inferCount++;
+    for (const k in probs) probs[k] = probs[k] * .45 + p[k] * .55; // suavizado
+  }
+  function topClass() { return CLASSES.reduce((a, b) => probs[a.id] >= probs[b.id] ? a : b); }
+  function renderBars() {
+    CLASSES.forEach(c => { const v = Math.round(probs[c.id] * 100); $('bar-' + c.id).style.width = v + '%'; $('pct-' + c.id).textContent = v + '%'; });
+    const c = topClass();
+    $('verdict').textContent = probs[c.id] > .6 ? `Tu IA ve: ${c.emoji} ${c.name}` : 'Tu IA duda…';
+  }
+  function moveStage(homeId) { $(homeId).appendChild(stage); }
+  function goTest() { moveStage('stageHome2'); show('s-test'); }
+
+  // ---------- Juego ----------
+  const game = $('game'), g = game.getContext('2d');
+  let G = null;
+  function sizeGame() { const r = game.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 2); game.width = r.width * dpr; game.height = r.height * dpr; }
+  function goGame() {
+    $('pip').prepend(stage); show('s-game'); sizeGame();
+    G = { y: .5, vy: 0, items: [], score: 0, start: 0, spawn: 0, count: 3, over: false, t0: performance.now() };
+    inferCount = 0; inferStart = performance.now();
+  }
+  function gameTick(t, dt) {
+    const W = game.width, H = game.height, u = Math.min(W, H) / 100;
+    const el = (t - G.t0) / 1000;
+    const cd = 3 - Math.floor(el);
+    $('countdown').textContent = cd > 0 ? cd : (el < 3.8 ? '¡Ya!' : '');
+    const playing = el >= 3, left = Math.max(0, GAME_SECONDS - (el - 3));
+    $('hudTime').textContent = Math.ceil(playing ? left : GAME_SECONDS);
+    const c = topClass(); $('pipNow').textContent = `${c.emoji} ${c.action}`;
+    // control del dron
+    const target = c.id === 'open' ? -1 : c.id === 'fist' ? 1 : 0;
+    G.vy += (target * .9 - G.vy) * Math.min(1, dt * 6);
+    G.y = Math.min(.9, Math.max(.1, G.y + G.vy * dt * .9));
+    if (playing && left > 0) {
+      G.spawn -= dt;
+      if (G.spawn <= 0) { G.spawn = .7 + Math.random() * .5; G.items.push({ x: 1.05, y: .12 + Math.random() * .76, bad: Math.random() < .25, hit: false }); }
+      const speed = .28 + (el - 3) / GAME_SECONDS * .25;
+      G.items.forEach(it => {
+        it.x -= speed * dt;
+        if (!it.hit && Math.abs(it.x - .2) < .045 && Math.abs(it.y - G.y) < .08) { it.hit = true; G.score = Math.max(0, G.score + (it.bad ? -1 : 1)); }
+      });
+      G.items = G.items.filter(it => it.x > -.1 && !it.hit);
+    } else if (playing && !G.over) { G.over = true; setTimeout(goResult, 600); }
+    $('hudScore').textContent = G.score;
+    // dibujo
+    g.clearRect(0, 0, W, H);
+    g.strokeStyle = 'rgba(255,255,255,.06)'; g.lineWidth = 1;
+    const off = (t / 20) % (10 * u);
+    for (let x = -off; x < W; x += 10 * u) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, H); g.stroke(); }
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    G.items.forEach(it => { g.font = `${9 * u}px serif`; g.fillText(it.bad ? '⚡' : '🔋', it.x * W, it.y * H); });
+    const dx = .2 * W, dy = G.y * H;
+    g.save(); g.translate(dx, dy); g.rotate(G.vy * .25);
+    g.fillStyle = '#f2661c'; g.beginPath(); g.roundRect(-8 * u, -3 * u, 16 * u, 6 * u, 3 * u); g.fill();
+    g.fillStyle = '#ffffff';
+    const spin = Math.abs(Math.sin(t / 30)) * 7 * u;
+    g.fillRect(-7 * u - spin / 2, -5 * u, spin, 1.2 * u); g.fillRect(7 * u - spin / 2, -5 * u, spin, 1.2 * u);
+    g.fillStyle = '#0fa8de'; g.beginPath(); g.arc(3 * u, 0, 1.6 * u, 0, 7); g.fill();
+    g.restore();
+  }
+
+  // ---------- Resultado + reinicio ----------
+  let resetTimer = null;
+  function goResult() {
+    show('s-result');
+    $('resScore').textContent = G.score;
+    $('resSamples').textContent = dataset.length;
+    $('resRate').textContent = Math.round(inferCount / ((performance.now() - inferStart) / 1000));
+    let n = RESULT_RESET_S; $('resetNote').textContent = `Vuelve al inicio en ${n} s`;
+    clearInterval(resetTimer);
+    resetTimer = setInterval(() => { n--; $('resetNote').textContent = `Vuelve al inicio en ${n} s`; if (n <= 0) resetAll(); }, 1000);
+  }
+  function resetAll() {
+    clearInterval(resetTimer); dataset = []; probs = { open: 0, fist: 0, none: 1 }; endHold();
+    moveStage('stageHome'); show('s-attract');
+  }
+
+  // ---------- Loop ----------
+  let last = performance.now();
+  function loop(t) {
+    const dt = Math.min(.05, (t - last) / 1000); last = t;
+    if (current !== 's-attract' && current !== 's-result') drawStage();
+    if (current === 's-train') trainTick(t);
+    if (current === 's-test' || current === 's-game') inferTick(t);
+    if (current === 's-test') renderBars();
+    if (current === 's-game' && G) gameTick(t, dt);
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+
+  // ---------- Botones, inactividad, kiosco ----------
+  $('startBtn').addEventListener('click', async () => {
+    try { await navigator.wakeLock?.request('screen'); } catch (_) {}
+    dataset = []; moveStage('stageHome'); show('s-train'); await startCamera(); setStep(0);
+  });
+  $('retrainBtn').addEventListener('click', () => { dataset = []; moveStage('stageHome'); show('s-train'); setStep(0); });
+  $('playBtn').addEventListener('click', goGame);
+  $('againBtn').addEventListener('click', () => { clearInterval(resetTimer); dataset = []; moveStage('stageHome'); show('s-train'); setStep(0); });
+  $('fsBtn').addEventListener('click', () => { try { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen().catch(() => {}); } catch (_) {} });
+  addEventListener('resize', () => { if (current === 's-game') sizeGame(); });
+  let lastTouch = Date.now();
+  ['pointerdown', 'keydown'].forEach(ev => addEventListener(ev, () => lastTouch = Date.now(), true));
+  setInterval(() => {
+    // Si alguien abandona a mitad del entrenamiento o la prueba, vuelve a la pantalla de atracción.
+    if (Date.now() - lastTouch > IDLE_MS && (current === 's-train' || current === 's-test')) resetAll();
+  }, 2000);
+})();
+</script>
+</body>
+</html>
