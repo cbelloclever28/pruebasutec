@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Mundo UTEC 3D</title>
+<meta name="description" content="Entrá al Mundo UTEC en 3D: explorá con tu macaquito y descubrí clases, becas, actividades y movilidad internacional.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mundo.css">
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
+</script>
+</head>
+<body>
+
+<!-- 1. PORTADA -->
+<section class="screen landing" id="landing">
+  <div class="landing-bg" aria-hidden="true">
+    <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>
+  </div>
+  <div class="landing-inner">
+    <img src="../assets/utec-logo-white.png" alt="UTEC" class="landing-logo">
+    <h1>Entrá al <span>Mundo UTEC</span></h1>
+    <p class="landing-sub">Elegí cómo querés entrar</p>
+    <div class="choices">
+      <button class="choice" id="btnEstudiante">
+        <span class="choice-emoji">🐒</span>
+        <span class="choice-title">Soy estudiante</span>
+        <span class="choice-text">Explorá el mundo con tu macaquito</span>
+      </button>
+      <button class="choice" id="btnDocente">
+        <span class="choice-emoji">🧑‍🏫</span>
+        <span class="choice-title">Soy docente</span>
+        <span class="choice-text">Recursos para tu tarea docente</span>
+      </button>
+    </div>
+    <a href="../index.html" class="landing-link">← Volver a utec 15 años</a>
+  </div>
+</section>
+
+<!-- 2. DOCENTE (en construcción) -->
+<section class="screen docente" id="docente" hidden>
+  <div class="landing-inner">
+    <span class="choice-emoji big">🚧</span>
+    <h1>Mundo docente</h1>
+    <p class="landing-sub">Este espacio está en construcción. Muy pronto vas a poder explorarlo.</p>
+    <button class="btn-pill" id="docenteBack">← Volver</button>
+  </div>
+</section>
+
+<!-- 3. MUNDO 3D ESTUDIANTE -->
+<section class="screen world" id="world" hidden>
+  <canvas id="worldCanvas"></canvas>
+
+  <div class="hud-top">
+    <button class="btn-pill" id="worldBack">← Salir</button>
+    <div class="hud-title"><img src="../assets/utec-logo-white.png" alt="UTEC"> <span>Mundo UTEC</span></div>
+    <div class="banana-count" id="bananaCount" title="Bananas juntadas">🍌 0/0</div>
+  </div>
+
+  <nav class="house-nav" id="houseNav" aria-label="Ir a una casa"></nav>
+
+  <div class="help" id="help">
+    <span class="only-desktop"><b>WASD</b> o <b>flechas</b> para moverte · <b>arrastrá</b> para girar la cámara · <b>click</b> en una casa para ir</span>
+    <span class="only-touch">Usá el <b>joystick</b> para moverte · <b>tocá</b> una casa para ir · arrastrá para girar</span>
+  </div>
+
+  <div class="door-prompt" id="doorPrompt" hidden>
+    <span id="doorText"></span>
+    <button id="doorBtn">Entrar <kbd class="only-desktop">E</kbd></button>
+  </div>
+
+  <div class="joystick" id="joystick" aria-hidden="true"><div class="knob" id="knob"></div></div>
+  <div class="toast" id="toast" role="status"></div>
+  <div class="loading" id="loading"><div class="spinner"></div><p>Cargando el mundo…</p></div>
+
+  <div class="house-panel" id="housePanel" hidden role="dialog" aria-modal="true" aria-labelledby="panelTitle">
+    <div class="panel-card">
+      <header class="panel-head" id="panelHead">
+        <span class="panel-icon" id="panelIcon"></span>
+        <div>
+          <p class="panel-kicker">Estás dentro de</p>
+          <h2 id="panelTitle"></h2>
+        </div>
+        <button class="panel-close" id="panelClose" aria-label="Cerrar">✕</button>
+      </header>
+      <p class="panel-intro" id="panelIntro"></p>
+      <div class="panel-grid" id="panelGrid"></div>
+      <button class="btn-exit" id="panelExit">🚪 Salir de la casa</button>
+    </div>
+  </div>
+</section>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
